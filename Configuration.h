@@ -36,84 +36,85 @@
 
 */
 
-#define NUM_EXTRUDER 0
-#define MOTHERBOARD 33
+#define NUM_EXTRUDER 0 //定义挤出机的数量
+#define MOTHERBOARD 33 //定义主板的类型 https://github.com/repetier/Repetier-Firmware/blob/development/src/ArduinoAVR/Repetier/Configuration.h
 #include "pins.h"
 
-// ################## EDIT THESE SETTINGS MANUALLY ################
-// ################ END MANUAL SETTINGS ##########################
+// ################## 手动编辑这些设置 ################
+// ################ 结束手动设置 ##########################
 
-#undef FAN_BOARD_PIN
-#define FAN_BOARD_PIN -1
-#define BOARD_FAN_SPEED 255
-#define FAN_THERMO_PIN -1
-#define FAN_THERMO_MIN_PWM 128
-#define FAN_THERMO_MAX_PWM 255
-#define FAN_THERMO_MIN_TEMP 45
-#define FAN_THERMO_MAX_TEMP 60
-#define FAN_THERMO_THERMISTOR_PIN -1
-#define FAN_THERMO_THERMISTOR_TYPE 1
+#undef FAN_BOARD_PIN //取消定义风扇引脚
+#define FAN_BOARD_PIN -1 //将风扇引脚设为-1，表示没有连接
+#define BOARD_FAN_SPEED 255 //将风扇速度设为255，表示最大速度
+#define FAN_THERMO_PIN -1 //将风扇温度传感器引脚设为-1，表示没有连接
+#define FAN_THERMO_MIN_PWM 128 //将风扇温度传感器的最小PWM值设为128，表示最小占空比
+#define FAN_THERMO_MAX_PWM 255 //将风扇温度传感器的最大PWM值设为255，表示最大占空比
+#define FAN_THERMO_MIN_TEMP 45 //将风扇温度传感器的最小温度设为45摄氏度，表示低于这个温度时风扇不工作
+#define FAN_THERMO_MAX_TEMP 60 //将风扇温度传感器的最小温度设为45摄氏度，表示低于这个温度时风扇不工作
+#define FAN_THERMO_THERMISTOR_PIN -1 //将风扇温度传感器的热敏电阻引脚设为-1，表示没有连接
+#define FAN_THERMO_THERMISTOR_TYPE 1 //将风扇温度传感器的热敏电阻引脚设为-1，表示没有连接
 
 //#define EXTERNALSERIAL  use Arduino serial library instead of build in. Requires more ram, has only 63 byte input buffer.
 // Uncomment the following line if you are using Arduino compatible firmware made for Arduino version earlier then 1.0
 // If it is incompatible you will get compiler errors about write functions not being compatible!
 //#define COMPAT_PRE1
-#define BLUETOOTH_SERIAL  -1
-#define BLUETOOTH_BAUD  115200
-#define MIXING_EXTRUDER 0
 
-#define DRIVE_SYSTEM 1
-#define XAXIS_STEPS_PER_MM 80
-#define YAXIS_STEPS_PER_MM 80
-#define ZAXIS_STEPS_PER_MM 80
-#define EXTRUDER_FAN_COOL_TEMP 50
-#define PDM_FOR_EXTRUDER 0
-#define PDM_FOR_COOLER 0
-#define DECOUPLING_TEST_MAX_HOLD_VARIANCE 20
-#define DECOUPLING_TEST_MIN_TEMP_RISE 1
-#define KILL_IF_SENSOR_DEFECT 0
-#define RETRACT_ON_PAUSE 2
-#define PAUSE_START_COMMANDS ""
-#define PAUSE_END_COMMANDS ""
-#define SHARED_EXTRUDER_HEATER 0
+#define BLUETOOTH_SERIAL  -1 //定义蓝牙端口 -1为没有蓝牙
+#define BLUETOOTH_BAUD  115200 //蓝牙波特率
+#define MIXING_EXTRUDER 0 //混合挤出机的数量为 ·0 
 
-#define FEATURE_RETRACTION 1
-#define AUTORETRACT_ENABLED 0
-#define RETRACTION_LENGTH 3
-#define RETRACTION_LONG_LENGTH 13
-#define RETRACTION_SPEED 40
-#define RETRACTION_Z_LIFT 0
-#define RETRACTION_UNDO_EXTRA_LENGTH 0
-#define RETRACTION_UNDO_EXTRA_LONG_LENGTH 0
-#define RETRACTION_UNDO_SPEED 20
-#define FILAMENTCHANGE_X_POS 0
-#define FILAMENTCHANGE_Y_POS 0
-#define FILAMENTCHANGE_Z_ADD  2
-#define FILAMENTCHANGE_REHOME 1
-#define FILAMENTCHANGE_SHORTRETRACT 5
-#define FILAMENTCHANGE_LONGRETRACT 50
-#define JAM_STEPS 220
-#define JAM_SLOWDOWN_STEPS 320
-#define JAM_SLOWDOWN_TO 70
-#define JAM_ERROR_STEPS 500
-#define JAM_MIN_STEPS 10
-#define JAM_ACTION 1
+#define DRIVE_SYSTEM 1 //定义驱动器系统，1表示corexy结构
+#define XAXIS_STEPS_PER_MM 160 //定义X轴每毫米的步数为80(16细分)160（32细分）
+#define YAXIS_STEPS_PER_MM 160 //定义Y轴每毫米的步数为80（16细分）160（32细分）
+#define ZAXIS_STEPS_PER_MM 80 //定义Z轴每毫米的步数为80（16细分）160（32细分）
+#define EXTRUDER_FAN_COOL_TEMP 50 // 定义挤出机风扇开启的温度为50摄氏度
+#define PDM_FOR_EXTRUDER 0 // 定义挤出机是否使用PDM（脉冲密度调制）控制，0表示否，1表示是
+#define PDM_FOR_COOLER 0 // 定义冷却风扇是否使用PDM控制，0表示否，1表示是
+#define DECOUPLING_TEST_MAX_HOLD_VARIANCE 20 // 定义温度稳定时的最大偏差为20摄氏度
+#define DECOUPLING_TEST_MIN_TEMP_RISE 1 // 定义温度上升时的最小增量为1摄氏度
+#define KILL_IF_SENSOR_DEFECT 0 // 定义当传感器故障时是否停止打印，0表示否，1表示是
+#define RETRACT_ON_PAUSE 2 // 定义暂停打印时的回抽长度为2毫米
+#define PAUSE_START_COMMANDS "" // 定义暂停打印时执行的G代码命令，用双引号包围，用\n分隔
+#define PAUSE_END_COMMANDS "" // 定义恢复打印时执行的G代码命令，用双引号包围，用\n分隔
+#define SHARED_EXTRUDER_HEATER 0 // 定义是否共享挤出机加热器，0表示否，1表示是
 
-#define RETRACT_DURING_HEATUP true
-#define PID_CONTROL_RANGE 20
-#define SKIP_M109_IF_WITHIN 2
-#define SCALE_PID_TO_MAX 0
-#define TEMP_HYSTERESIS 0
-#define EXTRUDE_MAXLENGTH 160
-#define NUM_TEMPS_USERTHERMISTOR0 0
-#define USER_THERMISTORTABLE0 {}
-#define NUM_TEMPS_USERTHERMISTOR1 0
+#define FEATURE_RETRACTION 1 // 定义是否启用回抽功能，0表示否，1表示是
+#define AUTORETRACT_ENABLED 0// 定义是否自动回抽，0表示否，1表示是
+#define RETRACTION_LENGTH 3 // 定义回抽长度为3毫米
+#define RETRACTION_LONG_LENGTH 13 // 定义长距离移动时的回抽长度为13毫米
+#define RETRACTION_SPEED 40 // 定义回抽速度为40毫米/秒
+#define RETRACTION_Z_LIFT 0 // 定义回抽时Z轴提升的高度为0毫米
+#define RETRACTION_UNDO_EXTRA_LENGTH 0 // 定义恢复挤出时额外推进的长度为0毫米
+#define RETRACTION_UNDO_EXTRA_LONG_LENGTH 0 // 定义长距离移动后恢复挤出时额外推进的长度为0毫米
+#define RETRACTION_UNDO_SPEED 20 // 定义恢复挤出时的速度为20毫米/秒
+#define FILAMENTCHANGE_X_POS 0 // 定义换料时X轴的位置为0毫米
+#define FILAMENTCHANGE_Y_POS 0 // 定义换料时Y轴的位置为0毫米
+#define FILAMENTCHANGE_Z_ADD  2 // 定义换料时Z轴提升的高度为2毫米
+#define FILAMENTCHANGE_REHOME 1 // 定义换料后是否重新归零，0表示否，1表示是
+#define FILAMENTCHANGE_SHORTRETRACT 5 // 定义换料前的短回抽长度为5毫米
+#define FILAMENTCHANGE_LONGRETRACT 50 // 定义换料前的长回抽长度为50毫米
+#define JAM_STEPS 220 // 定义检测到堵塞时需要走过的步数为220步
+#define JAM_SLOWDOWN_STEPS 320 // 定义减速打印时需要走过的步数为320步
+#define JAM_SLOWDOWN_TO 70 // 定义减速打印时的百分比速度为70%
+#define JAM_ERROR_STEPS 500 // 定义报错停止打印时需要走过的步数为500步
+#define JAM_MIN_STEPS 10 // 定义最小有效步数为10步
+#define JAM_ACTION 1  // 定义堵塞后执行的动作，0表示无动作，1表示暂停打印
+
+#define RETRACT_DURING_HEATUP true// 定义加热过程中是否回抽，true表示是，false表示否
+#define PID_CONTROL_RANGE 20// 定义PID控制范围为20摄氏度以内
+#define SKIP_M109_IF_WITHIN 2// 定义如果目标温度和当前温度相差小于2摄氏度，则跳过M109命令（等待目标温度）             
+#define SCALE_PID_TO_MAX 0// 定义是否根据最大功率比例调整PID输出值，0表示否，非零值表示是，并且该值就是最大功率百分比（例如64表示64%）
+#define TEMP_HYSTERESIS 0// 定义温度滞后值为0摄氏度（即温度波动范围）
+#define EXTRUDE_MAXLENGTH 160// 定义最大挤出长度为160毫米（防止意外操作导致损坏）
+#define NUM_TEMPS_USERTHERMISTOR0 0// 定义用户自定义热敏电阻表0中的温度点个数为0（即不使用）
+#define USER_THERMISTORTABLE0 {}// 略过用户自定义热敏电阻表0中的数据（因为不使用）
+#define NUM_TEMPS_USERTHERMISTOR1 0// 同上，对于用户自定义热敏电阻表1
 #define USER_THERMISTORTABLE1 {}
-#define NUM_TEMPS_USERTHERMISTOR2 0
+#define NUM_TEMPS_USERTHERMISTOR2 0// 同上，对于用户自定义热敏电阻表2
 #define USER_THERMISTORTABLE2 {}
-#define GENERIC_THERM_VREF 5
-#define GENERIC_THERM_NUM_ENTRIES 33
-#define HEATER_PWM_SPEED 0
+#define GENERIC_THERM_VREF 5//热敏电阻的参考电压
+#define GENERIC_THERM_NUM_ENTRIES 33//热敏电阻表中温度点个数
+#define HEATER_PWM_SPEED 0//指加热器的PWM（脉冲宽度调制）速度，0表示关闭PWM，1表示15Hz，2表示7.5Hz，3表示3.75Hz，4表示1.875Hz，5表示0.94Hz。
 
 // ############# Heated bed configuration ########################
 
@@ -133,6 +134,7 @@
 #define HEATED_BED_PID_MAX 255
 #define HEATED_BED_DECOUPLE_TEST_PERIOD 300000
 #define MIN_EXTRUDER_TEMP 150
+
 #define MAXTEMP 275
 #define MIN_DEFECT_TEMPERATURE -10
 #define MAX_DEFECT_TEMPERATURE 290
@@ -160,11 +162,22 @@ and G0 moves have it disables.
 
 In any case, laser only enables while moving. At the end of a move it gets
 automatically disabled.
+
+这串注释是用来说明Repetier-Firmware中的激光模式的功能和注意事项。
+激光模式可以控制一个激光输出来切割或雕刻材料，但是需要注意安全和防护，
+因为激光很危险，可能会伤害或致盲。默认的激光驱动只支持激光开和关，
+通过进给速度来控制强度。对于可更换的二极管激光器，这通常足够了。如果需要更多的控制，
+可以用一个自定义的扩展来设置0-255范围内的强度。具体的方法可以参考driver.h文件和相关的注释，
+利用事件系统来非侵入式地扩展功能。如果有一个激光-粉末系统，可以用E覆盖功能。如果移动包含一
+个增加的挤出机位置，那么就会在那个移动上激光。利用这个技巧，可以用现有的fdm切片器来激光输出。
+激光宽度就是挤出宽度。其他的工具可能用M3和M5来开启/关闭激光。在这里，G1/G2/G3移动有激光开启，
+而G0移动有激光关闭。在任何情况下，激光只在移动时开启。在移动结束时，它会自动关闭。
+
 */
 
-#define SUPPORT_LASER 1
-#define LASER_PIN HEATER_0_PIN
-#define LASER_ON_HIGH 1
+#define SUPPORT_LASER 1 //是否支持激光模式
+#define LASER_PIN HEATER_0_PIN //控制激光输出的引脚。这里用了加热器0的引脚
+#define LASER_ON_HIGH 1 //激光开启时的电平
 
 // ##                              CNC configuration                                       ##
 
@@ -186,18 +199,18 @@ It also can add a delay to wait for spindle to run on full speed.
 
 #define DEFAULT_PRINTER_MODE 1
 
-// ################ Endstop configuration #####################
+// ################ Endstop configuration 定义限位开关的参数#####################
 
-#define ENDSTOP_PULLUP_X_MIN true
-#define ENDSTOP_X_MIN_INVERTING true
-#define MIN_HARDWARE_ENDSTOP_X true
+#define ENDSTOP_PULLUP_X_MIN true // 定义X轴最小限位开关是否使用上拉电阻，true表示是，false表示否
+#define ENDSTOP_X_MIN_INVERTING true // 定义X轴最小限位开关的逻辑电平，true表示低电平触发，false表示高电平触发
+#define MIN_HARDWARE_ENDSTOP_X true // 定义X轴是否有最小限位开关，true表示是，false表示否
 #define ENDSTOP_PULLUP_Y_MIN true
 #define ENDSTOP_Y_MIN_INVERTING true
 #define MIN_HARDWARE_ENDSTOP_Y true
 #define ENDSTOP_PULLUP_Z_MIN true
 #define ENDSTOP_Z_MIN_INVERTING true
 #define MIN_HARDWARE_ENDSTOP_Z true
-#define ENDSTOP_PULLUP_X_MAX true
+#define ENDSTOP_PULLUP_X_MAX true// 同上，对于X轴最大限位开关
 #define ENDSTOP_X_MAX_INVERTING false
 #define MAX_HARDWARE_ENDSTOP_X false
 #define ENDSTOP_PULLUP_Y_MAX true
@@ -206,55 +219,55 @@ It also can add a delay to wait for spindle to run on full speed.
 #define ENDSTOP_PULLUP_Z_MAX true
 #define ENDSTOP_Z_MAX_INVERTING false
 #define MAX_HARDWARE_ENDSTOP_Z false
-#define max_software_endstop_r true
+#define max_software_endstop_r true // 定义是否使用软件限位开关来防止打印头超出打印范围，true表示是，false表示否
 
-#define min_software_endstop_x false
+#define min_software_endstop_x false// 定义是否使用软件限位开关来防止X轴超出最小位置，true表示是，false表示否
 #define min_software_endstop_y false
 #define min_software_endstop_z false
-#define max_software_endstop_x true
+#define max_software_endstop_x true// 定义是否使用软件限位开关来防止X轴超出最大位置，true表示是，false表示否
 #define max_software_endstop_y true
 #define max_software_endstop_z true
-#define ENDSTOP_X_BACK_MOVE 5
+#define ENDSTOP_X_BACK_MOVE 5// 定义X轴回零时，在触发限位开关后向反方向移动的距离（毫米）
 #define ENDSTOP_Y_BACK_MOVE 5
 #define ENDSTOP_Z_BACK_MOVE 0
-#define ENDSTOP_X_RETEST_REDUCTION_FACTOR 3
+#define ENDSTOP_X_RETEST_REDUCTION_FACTOR 3// 定义X轴回零时，在移动回去后重新测试限位开关时的速度减少因子（越大则速度越慢）
 #define ENDSTOP_Y_RETEST_REDUCTION_FACTOR 3
 #define ENDSTOP_Z_RETEST_REDUCTION_FACTOR 3
-#define ENDSTOP_X_BACK_ON_HOME 1
+#define ENDSTOP_X_BACK_ON_HOME 1// 定义X轴回零后再向反方向移动的距离（毫米）
 #define ENDSTOP_Y_BACK_ON_HOME 1
 #define ENDSTOP_Z_BACK_ON_HOME 0
-#define ALWAYS_CHECK_ENDSTOPS 1
+#define ALWAYS_CHECK_ENDSTOPS 1// 定义是否在每一步都检查限位开关的状态，1表示是，0表示否（只在回零时检查）
 
 // ################# XYZ movements ###################
 
-#define X_ENABLE_ON 0
+#define X_ENABLE_ON 0// 定义X轴电机使能时的电平，0表示低电平，1表示高电平
 #define Y_ENABLE_ON 0
 #define Z_ENABLE_ON 0
-#define DISABLE_X 0
+#define DISABLE_X 0// 定义是否在打印结束后关闭X轴电机，0表示否，1表示是
 #define DISABLE_Y 0
 #define DISABLE_Z 0
 #define DISABLE_E 0
-#define INVERT_X_DIR 0
+#define INVERT_X_DIR 0// 定义是否反转X轴的方向，0表示否，1表示是
 #define INVERT_Y_DIR 0
 #define INVERT_Z_DIR 1
-#define X_HOME_DIR -1
+#define X_HOME_DIR -1// 定义X轴回零时的方向，-1表示最小限位开关方向，1表示最大限位开关方向
 #define Y_HOME_DIR -1
 #define Z_HOME_DIR -1
-#define X_MAX_LENGTH 300
-#define Y_MAX_LENGTH 160
-#define Z_MAX_LENGTH 80
-#define X_MIN_POS 0
+#define X_MAX_LENGTH 300// 定义X轴的最大长度（毫米）
+#define Y_MAX_LENGTH 150
+#define Z_MAX_LENGTH 180
+#define X_MIN_POS 0// 定义X轴的最小位置（毫米）
 #define Y_MIN_POS 0
 #define Z_MIN_POS 0
-#define DISTORTION_CORRECTION 0
-#define DISTORTION_CORRECTION_POINTS 5
-#define DISTORTION_CORRECTION_R 100
-#define DISTORTION_PERMANENT 1
-#define DISTORTION_UPDATE_FREQUENCY 15
-#define DISTORTION_START_DEGRADE 0.5
-#define DISTORTION_END_HEIGHT 1
-#define DISTORTION_EXTRAPOLATE_CORNERS 0
-#define DISTORTION_XMIN 10
+#define DISTORTION_CORRECTION 0// 定义是否启用扭曲校正功能，0表示否，1表示是
+#define DISTORTION_CORRECTION_POINTS 5// 定义扭曲校正时使用的网格点数（每行/列）
+#define DISTORTION_CORRECTION_R 100// 定义扭曲校正时使用的圆形区域半径（毫米）
+#define DISTORTION_PERMANENT 1// 定义是否永久保存扭曲校正数据到EEPROM中，0表示否，1表示是
+#define DISTORTION_UPDATE_FREQUENCY 15// 定义扭曲校正时每多少步更新一次Z高度（步数）
+#define DISTORTION_START_DEGRADE 0.5// 定义扭曲校正开始衰减的高度（毫米）
+#define DISTORTION_END_HEIGHT 1// 定义扭曲校正结束的高度（毫米）
+#define DISTORTION_EXTRAPOLATE_CORNERS 0// 定义是否在网格外插值计算扭曲值，0表示否，1表示是
+#define DISTORTION_XMIN 10// 定义扭曲校正网格的X最小坐标（毫米）
 #define DISTORTION_YMIN 10
 #define DISTORTION_XMAX 190
 #define DISTORTION_YMAX 190
@@ -263,90 +276,90 @@ It also can add a delay to wait for spindle to run on full speed.
 // ##                           Movement settings                                          ##
 // ##########################################################################################
 
-#define FEATURE_BABYSTEPPING 1
-#define BABYSTEP_MULTIPLICATOR 1
+#define FEATURE_BABYSTEPPING 1 // 定义是否启用微调功能，0表示否，1表示是
+#define BABYSTEP_MULTIPLICATOR 1 // 定义微调的倍数，越大则每次微调的距离越大
 
-#define DELTA_SEGMENTS_PER_SECOND_PRINT 180 // Move accurate setting for print moves
-#define DELTA_SEGMENTS_PER_SECOND_MOVE 70 // Less accurate setting for other moves
-#define EXACT_DELTA_MOVES 1
+#define DELTA_SEGMENTS_PER_SECOND_PRINT 180 // Move accurate setting for print moves// 定义三角洲式打印机在打印时的分段数，越大则打印的曲线越平滑
+#define DELTA_SEGMENTS_PER_SECOND_MOVE 70 // Less accurate setting for other moves// 定义三角洲式打印机在非打印移动时的分段数，越大则移动的曲线越平滑
+#define EXACT_DELTA_MOVES 1// 定义是否使用精确的三角洲式打印机移动算法，0表示否，1表示是
 
 // Delta settings
-#define DELTA_HOME_ON_POWER 0
+#define DELTA_HOME_ON_POWER 0// 定义是否在上电后自动回零三角洲式打印机，0表示否，1表示是
 
-#define DELTASEGMENTS_PER_PRINTLINE 24
-#define STEPPER_INACTIVE_TIME 360L
-#define MAX_INACTIVE_TIME 0L
-#define MAX_FEEDRATE_X 200
-#define MAX_FEEDRATE_Y 200
-#define MAX_FEEDRATE_Z 2
-#define HOMING_FEEDRATE_X 40
-#define HOMING_FEEDRATE_Y 40
-#define HOMING_FEEDRATE_Z 2
-#define HOMING_ORDER HOME_ORDER_ZXY
-#define ZHOME_MIN_TEMPERATURE 0
-#define ZHOME_HEAT_ALL 1
-#define ZHOME_HEAT_HEIGHT 20
-#define ZHOME_X_POS 999999
-#define ZHOME_Y_POS 999999
-#define ENABLE_BACKLASH_COMPENSATION 0
-#define X_BACKLASH 0
-#define Y_BACKLASH 0
-#define Z_BACKLASH 0
-#define RAMP_ACCELERATION 1
-#define STEPPER_HIGH_DELAY 1
-#define DIRECTION_DELAY 0
-#define STEP_DOUBLER_FREQUENCY 12000
-#define ALLOW_QUADSTEPPING 1
-#define DOUBLE_STEP_DELAY 0 // time in microseconds
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_X 1000
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1000
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 1000
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1000
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
-#define INTERPOLATE_ACCELERATION_WITH_Z 0
-#define ACCELERATION_FACTOR_TOP 100
-#define MAX_JERK 20
-#define MAX_ZJERK 0.3
-#define PRINTLINE_CACHE_SIZE 16
-#define MOVE_CACHE_LOW 10
-#define LOW_TICKS_PER_MOVE 250000
-#define EXTRUDER_SWITCH_XY_SPEED 100
-#define DUAL_X_AXIS 0
-#define FEATURE_TWO_XSTEPPER 0
-#define X2_STEP_PIN   ORIG_E1_STEP_PIN
-#define X2_DIR_PIN    ORIG_E1_DIR_PIN
-#define X2_ENABLE_PIN ORIG_E1_ENABLE_PIN
-#define FEATURE_TWO_YSTEPPER 0
-#define Y2_STEP_PIN   ORIG_E1_STEP_PIN
-#define Y2_DIR_PIN    ORIG_E1_DIR_PIN
-#define Y2_ENABLE_PIN ORIG_E1_ENABLE_PIN
-#define FEATURE_TWO_ZSTEPPER 0
-#define Z2_STEP_PIN   ORIG_E1_STEP_PIN
-#define Z2_DIR_PIN    ORIG_E1_DIR_PIN
-#define Z2_ENABLE_PIN ORIG_E1_ENABLE_PIN
-#define FEATURE_THREE_ZSTEPPER 0
-#define Z3_STEP_PIN   ORIG_E2_STEP_PIN
-#define Z3_DIR_PIN    ORIG_E2_DIR_PIN
-#define Z3_ENABLE_PIN ORIG_E2_ENABLE_PIN
-#define FEATURE_DITTO_PRINTING 0
-#define USE_ADVANCE 0
-#define ENABLE_QUADRATIC_ADVANCE 0
+#define DELTASEGMENTS_PER_PRINTLINE 24 // 定义三角洲式打印机在打印时每条直线的分段数，越大则打印的曲线越平滑
+#define STEPPER_INACTIVE_TIME 360L // 定义电机在无动作后多久关闭（秒），0表示不关闭
+#define MAX_INACTIVE_TIME 0L // 定义打印机在无动作后多久关闭（秒），0表示不关闭
+#define MAX_FEEDRATE_X 200 // 定义X轴的最大进给速度（毫米/秒）
+#define MAX_FEEDRATE_Y 200 // 定义Y轴的最大进给速度（毫米/秒）
+#define MAX_FEEDRATE_Z 2 // 定义Z轴的最大进给速度（毫米/秒）
+#define HOMING_FEEDRATE_X 40 // 定义X轴回零时的进给速度（毫米/秒）
+#define HOMING_FEEDRATE_Y 40 // 定义Y轴回零时的进给速度（毫米/秒）
+#define HOMING_FEEDRATE_Z 2 // 定义Z轴回零时的进给速度（毫米/秒）
+#define HOMING_ORDER HOME_ORDER_ZXY // 定义回零时的顺序，可以是HOME_ORDER_XYZ, HOME_ORDER_XZY, HOME_ORDER_YXZ, HOME_ORDER_YZX, HOME_ORDER_ZXY 或 HOME_ORDER_ZYX
+#define ZHOME_MIN_TEMPERATURE 0 // 定义Z轴回零时挤出头的最低温度（摄氏度）
+#define ZHOME_HEAT_ALL 1 // 定义Z轴回零时是否加热所有挤出头，0表示否，1表示是
+#define ZHOME_HEAT_HEIGHT 20 // 定义Z轴回零时加热挤出头的高度（毫米）
+#define ZHOME_X_POS 999999 // 定义Z轴回零时X轴的位置（毫米），999999表示不改变位置
+#define ZHOME_Y_POS 999999 // 定义Z轴回零时Y轴的位置（毫米），999999表示不改变位置
+#define ENABLE_BACKLASH_COMPENSATION 0 // 定义是否启用反向间隙补偿功能，0表示否，1表示是
+#define X_BACKLASH 0 // 定义X轴的反向间隙值（毫米）
+#define Y_BACKLASH 0 // 定义Y轴的反向间隙值（毫米）
+#define Z_BACKLASH 0 // 定义Z轴的反向间隙值（毫米）
+#define RAMP_ACCELERATION 1 // 定义是否启用加速度控制功能，0表示否，1表示是
+#define STEPPER_HIGH_DELAY 1 // 定义步进电机高电平持续时间（微秒）
+#define DIRECTION_DELAY 0 // 定义步进电机方向切换延迟时间（微秒）
+#define STEP_DOUBLER_FREQUENCY 12000 // 定义步进电机双倍频率（赫兹）
+#define ALLOW_QUADSTEPPING 1 // 定义是否允许步进电机四倍步进，0表示否，1表示是
+#define DOUBLE_STEP_DELAY 0 // 定义步进电机双倍步进延迟时间（微秒）
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_X 1000 // 定义X轴的最大加速度（毫米/平方秒）
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1000 // 同上，对于Y轴
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100 // 同上，对于Z轴
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 1000 // 同上，对于X轴非打印移动
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1000 // 同上，对于Y轴非打印移动
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100 // 同上，对于Z轴非打印移动
+#define INTERPOLATE_ACCELERATION_WITH_Z 0 // 定义是否根据Z高度插值计算加速度，0表示否，1表示是
+#define ACCELERATION_FACTOR_TOP 100 // 定义加速度插值计算时使用的百分比因子
+#define MAX_JERK 20 // 定义最大冲击值（毫米/秒），决定了加速度变化时能承受多大的突变量
+#define MAX_ZJERK 0.3 // 同上，对于Z轴
+#define PRINTLINE_CACHE_SIZE 16 // 定义缓存队列中能存储多少条指令
+#define MOVE_CACHE_LOW 10 // 定义缓存队列中剩余多少条指令时开始减慢速度
+#define LOW_TICKS_PER_MOVE 250000 // 定义每条指令执行所需最少时间（微秒），防止过快执行造成错误或丢失步数
+#define EXTRUDER_SWITCH_XY_SPEED 100 // 定义切换挤出头时XY轴移动的速度（毫米/分钟）
+#define DUAL_X_AXIS 0 // 定义是否使用双X轴功能，0表示否，1表示是
+#define FEATURE_TWO_XSTEPPER 0 // 同上，对于双X轴电机功能
+#define X2_STEP_PIN ORIG_E1_STEP_PIN // 如果使用双X轴电机功能，则定义第二个X轴电机步进信号引脚为挤出机1步进信号引脚
+#define X2_DIR_PIN ORIG_E1_DIR_PIN   // 如果使用双X轴电机功能，则定义第二个X轴电机方向信号引脚为挤出机1方向信号引脚
+#define X2_ENABLE_PIN ORIG_E1_ENABLE_PIN   // 如果使用双X轴电机功能，则定义第二个X轴电机使能信号引脚为挤出机1使能信号引脚
+#define FEATURE_TWO_YSTEPPER 0   // 同上，对于双Y轴电机功能
+#define Y2_STEP_PIN ORIG_E1_STEP_PIN   // 如果使用双Y轴电机功能，则定义第二个Y轴电机步进信号引脚为挤出机1步进信号引脚
+#define Y2_DIR_PIN ORIG_E1_DIR_PIN   // 如果使用双Y轴电机功能，则定义第二个Y轴电机方向信号引脚为挤出机1方向信号引脚
+#define Y2_ENABLE_PIN ORIG_E1_ENABLE_PIN   // 如果使用双Y轴
+#define FEATURE_TWO_ZSTEPPER 0 // 定义是否使用双Z轴电机功能，0表示否，1表示是
+#define Z2_STEP_PIN ORIG_E1_STEP_PIN // 如果使用双Z轴电机功能，则定义第二个Z轴电机步进信号引脚为挤出机1步进信号引脚
+#define Z2_DIR_PIN ORIG_E1_DIR_PIN // 如果使用双Z轴电机功能，则定义第二个Z轴电机方向信号引脚为挤出机1方向信号引脚
+#define Z2_ENABLE_PIN ORIG_E1_ENABLE_PIN // 如果使用双Z轴电机功能，则定义第二个Z轴电机使能信号引脚为挤出机1使能信号引脚
+#define FEATURE_THREE_ZSTEPPER 0 // 定义是否使用三Z轴电机功能，0表示否，1表示是
+#define Z3_STEP_PIN ORIG_E2_STEP_PIN // 如果使用三Z轴电机功能，则定义第三个Z轴电机步进信号引脚为挤出机2步进信号引脚
+#define Z3_DIR_PIN ORIG_E2_DIR_PIN // 如果使用三Z轴电机功能，则定义第三个Z轴电机方向信号引脚为挤出机2方向信号引脚
+#define Z3_ENABLE_PIN ORIG_E2_ENABLE_PIN // 如果使用三Z轴电机功能，则定义第三个Z轴电机使能信号引脚为挤出机2使能信号引脚
+#define FEATURE_DITTO_PRINTING 0 // 定义是否启用ditto打印功能，即两个挤出头同时打印相同的物体，0表示否，1表示是
+#define USE_ADVANCE 0 // 定义是否启用advance算法来优化挤出速度，0表示否，1表示是
+#define ENABLE_QUADRATIC_ADVANCE 0 // 定义是否启用二次advance算法来优化挤出速度，0表示否，1表示是
 
 
 // ################# Misc. settings ##################
 
-#define BAUDRATE 115200
-#define ENABLE_POWER_ON_STARTUP 1
-#define POWER_INVERTING 0
-#define KILL_METHOD 1
-#define ACK_WITH_LINENUMBER 1
-#define WAITING_IDENTIFIER "wait"
-#define ECHO_ON_EXECUTE 1
-#define EEPROM_MODE 2
-#undef PS_ON_PIN
-#define PS_ON_PIN ORIG_PS_ON_PIN
-#define JSON_OUTPUT 0
+#define BAUDRATE 115200 // 定义与主机软件通信的波特率（比特/秒）
+#define ENABLE_POWER_ON_STARTUP 1 // 定义是否在上电后自动打开电源，0表示否，1表示是
+#define POWER_INVERTING 0 // 定义是否反转电源控制信号，0表示否，1表示是
+#define KILL_METHOD 1 // 定义紧急停止时的处理方式，0表示只关闭电源，1表示重置打印机
+#define ACK_WITH_LINENUMBER 1 // 定义是否在回应主机软件时附加行号，0表示否，1表示是
+#define WAITING_IDENTIFIER "wait" // 定义在等待主机软件发送指令时发送的字符串
+#define ECHO_ON_EXECUTE 1 // 定义是否在执行指令时回显指令内容，0表示否，1表示是
+#define EEPROM_MODE 2 // 定义EEPROM的工作模式，0表示禁用EEPROM，1表示使用固定地址存储数据，2表示使用动态地址存储数据
+#undef PS_ON_PIN // 取消定义PS_ON_PIN宏
+#define PS_ON_PIN ORIG_PS_ON_PIN // 重新定义PS_ON_PIN宏为ORIG_PS_ON_PIN宏，即电源控制信号引脚
+#define JSON_OUTPUT 0 // 定义是否使用JSON格式输出数据，0表示否，1表示是
 
 /* ======== Servos =======
 Control the servos with
@@ -354,85 +367,82 @@ M340 P<servoId> S<pulseInUS>   / ServoID = 0..3  pulseInUs = 500..2500
 Servos are controlled by a pulse width normally between 500 and 2500 with 1500ms in center position. 0 turns servo off.
 WARNING: Servos can draw a considerable amount of current. Make sure your system can handle this or you may risk your hardware!
 */
-#define FEATURE_SERVO 0
-#define SERVO0_PIN 11
-#define SERVO1_PIN -1
-#define SERVO2_PIN -1
-#define SERVO3_PIN -1
-#define SERVO0_NEUTRAL_POS  -1
-#define SERVO1_NEUTRAL_POS  -1
-#define SERVO2_NEUTRAL_POS  -1
-#define SERVO3_NEUTRAL_POS  -1
-#define UI_SERVO_CONTROL 0
-#define FAN_KICKSTART_TIME  200
+#define FEATURE_SERVO 0 // 定义是否启用伺服电机功能，0表示否，1表示是
+#define SERVO0_PIN 11 // 定义第一个伺服电机信号引脚为11号引脚
+#define SERVO1_PIN -1 // 定义第二个伺服电机信号引脚为-1，即不使用
+#define SERVO2_PIN -1 // 定义第三个伺服电机信号引脚为-1，即不使用
+#define SERVO3_PIN -1 // 定义第四个伺服电机信号引脚为-1，即不使用
+#define SERVO0_NEUTRAL_POS -1 // 定义第一个伺服电机的中立位置（微秒），-1表示使用固件默认值
+#define SERVO1_NEUTRAL_POS -1 // 定义第二个伺服电机的中立位置（微秒），-1表示使用固件默认值
+#define SERVO2_NEUTRAL_POS -1 // 定义第三个伺服电机的中立位置（微秒），-1表示使用固件默认值
+#define SERVO3_NEUTRAL_POS -1 // 定义第四个伺服电机的中立位置（微秒），-1表示使用固件默认值
+#define UI_SERVO_CONTROL 0 // 定义是否在LCD菜单中控制伺服电机，0表示否，大于0表示控制的伺服电机编号
+#define FAN_KICKSTART_TIME 200 // 定义风扇启动时的最大功率持续时间（毫秒）
 
-        #define FEATURE_WATCHDOG 0
+        #define FEATURE_WATCHDOG 0 // 定义是否启用看门狗功能，0表示否，1表示是。看门狗功能可以在打印机出现故障时自动重置打印机，防止过热或其他危险情况。
 
 // #################### Z-Probing #####################
 
-#define Z_PROBE_Z_OFFSET 0
-#define Z_PROBE_Z_OFFSET_MODE 0
-#define UI_BED_COATING 1
-#define FEATURE_Z_PROBE 0
-#define Z_PROBE_BED_DISTANCE 10
-#define Z_PROBE_PIN -1
-#define Z_PROBE_PULLUP 0
-#define Z_PROBE_ON_HIGH 0
-#define Z_PROBE_X_OFFSET 0
-#define Z_PROBE_Y_OFFSET 0
-#define Z_PROBE_WAIT_BEFORE_TEST 0
-#define Z_PROBE_SPEED 2
-#define Z_PROBE_XY_SPEED 150
-#define Z_PROBE_SWITCHING_DISTANCE 1
-#define Z_PROBE_REPETITIONS 1
-#define Z_PROBE_HEIGHT 40
-#define Z_PROBE_START_SCRIPT ""
-#define Z_PROBE_FINISHED_SCRIPT ""
-#define Z_PROBE_REQUIRES_HEATING 0
-#define Z_PROBE_MIN_TEMPERATURE 150
-#define FEATURE_AUTOLEVEL 1
-#define Z_PROBE_X1 20
-#define Z_PROBE_Y1 20
-#define Z_PROBE_X2 160
-#define Z_PROBE_Y2 20
-#define Z_PROBE_X3 100
-#define Z_PROBE_Y3 160
-#define BED_LEVELING_METHOD 0
-#define BED_CORRECTION_METHOD 0
-#define BED_LEVELING_GRID_SIZE 5
-#define BED_LEVELING_REPETITIONS 5
-#define BED_MOTOR_1_X 0
-#define BED_MOTOR_1_Y 0
-#define BED_MOTOR_2_X 200
-#define BED_MOTOR_2_Y 0
-#define BED_MOTOR_3_X 100
-#define BED_MOTOR_3_Y 200
-#define BENDING_CORRECTION_A 0
-#define BENDING_CORRECTION_B 0
-#define BENDING_CORRECTION_C 0
-#define FEATURE_AXISCOMP 0
-#define AXISCOMP_TANXY 0
-#define AXISCOMP_TANYZ 0
-#define AXISCOMP_TANXZ 0
+#define Z_PROBE_Z_OFFSET 0 // 定义Z探针在触发时与喷嘴的高度差（毫米），正值表示探针在喷嘴下方，负值表示探针在喷嘴上方
+#define Z_PROBE_Z_OFFSET_MODE 0 // 定义Z探针的高度差模式，0表示使用固定值，1表示使用EEPROM中的值，2表示使用LCD菜单中的值
+#define UI_BED_COATING 1 // 定义是否在LCD菜单中显示床涂层的厚度，0表示否，1表示是
+#define FEATURE_Z_PROBE 0 // 定义是否启用Z探针功能，0表示否，1表示是
+#define Z_PROBE_BED_DISTANCE 10 // 定义Z探针测量前移动到的高度（毫米）
+#define Z_PROBE_PIN -1 // 定义Z探针信号引脚为-1，即不使用
+#define Z_PROBE_PULLUP 0 // 定义是否启用Z探针信号引脚的上拉电阻，0表示否，1表示是
+#define Z_PROBE_ON_HIGH 0 // 定义Z探针触发时的信号电平，0表示低电平，1表示高电平
+#define Z_PROBE_X_OFFSET 0 // 定义Z探针相对于喷嘴的X方向偏移量（毫米）
+#define Z_PROBE_Y_OFFSET 0 // 定义Z探针相对于喷嘴的Y方向偏移量（毫米）
+#define Z_PROBE_WAIT_BEFORE_TEST 0 // 定义是否在每次测量前等待用户确认，0表示否，1表示是
+#define Z_PROBE_SPEED 2 // 定义Z探针测量时的速度（毫米/秒）
+#define Z_PROBE_XY_SPEED 150 // 定义Z探针移动时的速度（毫米/秒）
+#define Z_PROBE_SWITCHING_DISTANCE 1 // 定义Z探针在测量前后移动的距离（毫米）
+#define Z_PROBE_REPETITIONS 1 // 定义每个点的测量次数，越多越精确，但也越慢
+#define Z_PROBE_HEIGHT 40 // 定义Z探针触发时喷嘴距离床面的高度（毫米），正值表示喷嘴在床面上方，负值表示喷嘴在床面下方
+#define Z_PROBE_START_SCRIPT "" // 定义在开始测量前执行的G代码脚本
+#define Z_PROBE_FINISHED_SCRIPT "" // 定义在结束测量后执行的G代码脚本
+#define Z_PROBE_REQUIRES_HEATING 0 // 定义是否在测量前加热挤出头和热床，0表示否，1表示是
+#define Z_PROBE_MIN_TEMPERATURE 150 // 定义测量前挤出头和热床的最低温度（摄氏度）
+#define FEATURE_AUTOLEVEL 1 // 定义是否启用自动调平功能，0表示否，1表示是
+#define Z_PROBE_X1 20 // 定义第一个测量点的X坐标（毫米）
+#define Z_PROBE_Y1 20 // 定义第一个测量点的Y坐标（毫米）
+#define Z_PROBE_X2 160 // 定义第二个测量点的X坐标（毫米）
+#define Z_PROBE_Y2 20 // 定义第二个测量点的Y坐标（毫米）
+#define Z_PROBE_X3 100 // 定义第三个测量点的X坐标（毫米）
+#define Z_PROBE_Y3 160 // 定义第三个测量点的Y坐标（毫米）
+#define BED_LEVELING_METHOD 0 // 定义调平方法，0表示使用3点法求平面，1表示使用最小二乘法求平面
+#define BED_CORRECTION_METHOD 0 // 定义调平校正方法，0表示使用软件旋转校正，1表示使用电机调整校正
+#define BED_LEVELING_GRID_SIZE 5 // 定义调平网格大小，即每行或每列有多少个测量点
+#define BED_LEVELING_REPETITIONS 5 // 定义调平重复次数，即每个点重复测量多少次取平均值
+#define BED_MOTOR_1_X 0 // 定义第一个床电机的X坐标（毫米）
+#define BED_MOTOR_1_Y 0 // 定义第一个床电机的Y坐标（毫米）
+#define BED_MOTOR_2_X 200 // 同上，对于第二个床电机
+#define BENDING_CORRECTION_A 0 // 定义床弯曲校正的A系数，用于修正床在X方向的弯曲
+#define BENDING_CORRECTION_B 0 // 定义床弯曲校正的B系数，用于修正床在Y方向的弯曲
+#define BENDING_CORRECTION_C 0 // 定义床弯曲校正的C系数，用于修正床在XY方向的弯曲
+#define FEATURE_AXISCOMP 0 // 定义是否启用轴补偿功能，0表示否，1表示是。轴补偿功能可以修正轴之间的角度误差
+#define AXISCOMP_TANXY 0 // 定义XY轴之间的正切值，用于修正XY轴的角度误差
+#define AXISCOMP_TANYZ 0 // 定义YZ轴之间的正切值，用于修正YZ轴的角度误差
+#define AXISCOMP_TANXZ 0 // 定义XZ轴之间的正切值，用于修正XZ轴的角度误差
 
-#ifndef SDSUPPORT  // Some boards have sd support on board. These define the values already in pins.h
-#define SDSUPPORT 0
-#undef SDCARDDETECT
-#define SDCARDDETECT -1
-#define SDCARDDETECTINVERTED 0
+#ifndef SDSUPPORT // Some boards have sd support on board. These define the values already in pins.h
+#define SDSUPPORT 0 // 定义是否启用SD卡支持功能，0表示否，1表示是
+#undef SDCARDDETECT // 取消定义SDCARDDETECT宏
+#define SDCARDDETECT -1 // 定义SD卡检测引脚为-1，即不使用
+#define SDCARDDETECTINVERTED 0 // 定义SD卡检测信号是否反转，0表示否，1表示是
 #endif
-#define SD_EXTENDED_DIR 1 /** Show extended directory including file length. Don't use this with Pronterface! */
-#define SD_RUN_ON_STOP ""
-#define SD_STOP_HEATER_AND_MOTORS_ON_STOP 1
-#define ARC_SUPPORT 1
-#define FEATURE_MEMORY_POSITION 1
-#define FEATURE_CHECKSUM_FORCED 0
-#define FEATURE_FAN_CONTROL 1
-#define FEATURE_FAN2_CONTROL 0
-#define FEATURE_CONTROLLER 0
-#define ADC_KEYPAD_PIN -1
-#define LANGUAGE_EN_ACTIVE 1
-#define LANGUAGE_DE_ACTIVE 1
+#define SD_EXTENDED_DIR 1 /** Show extended directory including file length. Don't use this with Pronterface! */ // 定义是否显示扩展目录，包括文件长度。不要与Pronterface软件一起使用！0表示否，1表示是
+#define SD_RUN_ON_STOP "" // 定义在停止打印时执行的G代码脚本
+#define SD_STOP_HEATER_AND_MOTORS_ON_STOP 1 // 定义在停止打印时是否关闭加热器和电机，0表示否，1表示是
+#define ARC_SUPPORT 1 // 定义是否支持圆弧指令（G2/G3），0表示否，1表示是
+#define FEATURE_MEMORY_POSITION 1 // 定义是否启用记忆位置功能，即使用G60/G61指令保存和恢复位置，0表示否，1表示是
+#define FEATURE_CHECKSUM_FORCED 0 // 定义是否强制使用校验和功能，即如果主机软件没有发送校验和，则拒绝执行指令，0表示否，1表示是
+#define FEATURE_FAN_CONTROL 1 // 定义是否启用风扇控制功能，0表示否，1表示是
+#define FEATURE_FAN2_CONTROL 0 // 定义是否启用第二个风扇控制功能，0表示否，1表示是
+#define FEATURE_CONTROLLER 0 // 定义使用哪种LCD控制器类型，具体值参考固件文档
+#define ADC_KEYPAD_PIN -1 // 定义ADC键盘引脚为-1，即不使用
+#define LANGUAGE_EN_ACTIVE 1 // 定义是否启用英语语言选项，0表示否，1表示是
+#define LANGUAGE_DE_ACTIVE 1 // 同上，对于德语语言选项
 #define LANGUAGE_NL_ACTIVE 0
 #define LANGUAGE_PT_ACTIVE 1
 #define LANGUAGE_IT_ACTIVE 1
@@ -443,37 +453,36 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define LANGUAGE_CZ_ACTIVE 0
 #define LANGUAGE_PL_ACTIVE 1
 #define LANGUAGE_TR_ACTIVE 1
-#define UI_PRINTER_NAME "RepRap"
-#define UI_PRINTER_COMPANY "Home made"
-#define UI_PAGES_DURATION 4000
-#define UI_ANIMATION 0
-#define UI_SPEEDDEPENDENT_POSITIONING 0
-#define UI_DISABLE_AUTO_PAGESWITCH 1
-#define UI_AUTORETURN_TO_MENU_AFTER 30000
-#define FEATURE_UI_KEYS 0
-#define UI_ENCODER_SPEED 1
-#define UI_REVERSE_ENCODER 0
-#define UI_KEY_BOUNCETIME 10
-#define UI_KEY_FIRST_REPEAT 500
-#define UI_KEY_REDUCE_REPEAT 50
-#define UI_KEY_MIN_REPEAT 50
-#define FEATURE_BEEPER 0
-#define CASE_LIGHTS_PIN -1
-#define CASE_LIGHT_DEFAULT_ON 1
-#define UI_START_SCREEN_DELAY 1000
-#define UI_DYNAMIC_ENCODER_SPEED 1
-        /**
+#define UI_PRINTER_NAME "RepRap" // 定义打印机的名称，显示在LCD界面上
+#define UI_PRINTER_COMPANY "Home made" // 定义打印机的制造商，显示在LCD界面上
+#define UI_PAGES_DURATION 4000 // 定义LCD界面的页面切换时间（毫秒）
+#define UI_ANIMATION 0 // 定义是否启用LCD界面的动画效果，0表示否，1表示是
+#define UI_SPEEDDEPENDENT_POSITIONING 0 // 定义是否启用速度相关的位置控制，0表示否，1表示是。这个功能可以根据旋钮的旋转速度来调整移动距离
+#define UI_DISABLE_AUTO_PAGESWITCH 1 // 定义是否禁用LCD界面的自动页面切换，0表示否，1表示是
+#define UI_AUTORETURN_TO_MENU_AFTER 30000 // 定义在多长时间后自动返回LCD界面的主菜单（毫秒）
+#define FEATURE_UI_KEYS 0 // 定义是否启用LCD界面的按键功能，0表示否，1表示是
+#define UI_ENCODER_SPEED 1 // 定义LCD界面的旋钮速度，即每次旋转多少步改变一个值。可选值有1,2,4
+#define UI_REVERSE_ENCODER 0 // 定义是否反转LCD界面的旋钮方向，0表示否，1表示是
+#define UI_KEY_BOUNCETIME 10 // 定义LCD界面的按键消抖时间（毫秒）
+#define UI_KEY_FIRST_REPEAT 500 // 定义LCD界面的按键第一次重复发送信号的延迟时间（毫秒）
+#define UI_KEY_REDUCE_REPEAT 50 // 定义LCD界面的按键重复发送信号的递减时间（毫秒）
+#define UI_KEY_MIN_REPEAT 50 // 定义LCD界面的按键重复发送信号的最小时间（毫秒）
+#define FEATURE_BEEPER 0 // 定义是否启用蜂鸣器功能，0表示否，1表示是。蜂鸣器功能可以在按键或重要操作时发出声音提示
+#define CASE_LIGHTS_PIN -1 // 定义机箱灯控制引脚为-1，即不使用
+#define CASE_LIGHT_DEFAULT_ON 1 // 定义机箱灯默认状态，0表示关闭，1表示打开
+#define UI_START_SCREEN_DELAY 1000 // 定义LCD界面启动画面的延迟时间（毫秒）
+#define UI_DYNAMIC_ENCODER_SPEED 1 // 定义是否启用动态旋钮速度功能，0表示否，1表示是。这个功能可以根据旋钮的旋转速度来调整移动距离
+ /**
 Beeper sound definitions for short beeps during key actions
 and longer beeps for important actions.
 Parameter is delay in microseconds and the secons is the number of repetitions.
 Values must be in range 1..255
 */
-#define BEEPER_SHORT_SEQUENCE 2,2
-#define BEEPER_LONG_SEQUENCE 8,8
-#define UI_SET_PRESET_HEATED_BED_TEMP_PLA 60
-#define UI_SET_PRESET_EXTRUDER_TEMP_PLA   190
-#define UI_SET_PRESET_HEATED_BED_TEMP_ABS 110
-#define UI_SET_PRESET_EXTRUDER_TEMP_ABS   240
+#define BEEPER_SHORT_SEQUENCE 2,2 // 定义短蜂鸣声序列为2微秒延迟和2次重复
+#define BEEPER_LONG_SEQUENCE 8,8 // 定义长蜂鸣声序列为8微秒延迟和8次重复
+#define UI_SET_PRESET_HEATED_BED_TEMP_PLA 60 // 定义PLA材料预设热床温度为60摄氏度
+#define UI_SET_PRESET_EXTRUDER_TEMP_PLA 190 // 定义PLA材料预设挤出头温度为190摄氏度
+#define UI_SET_PRESET_HEATED_BED_TEMP_ABS 110 // 同上，对于ABS材料预设热床温度
 #define UI_SET_MIN_HEATED_BED_TEMP  30
 #define UI_SET_MAX_HEATED_BED_TEMP 120
 #define UI_SET_MIN_EXTRUDER_TEMP   170
@@ -482,12 +491,12 @@ Values must be in range 1..255
 #define UI_SET_EXTRUDER_RETRACT_DISTANCE 3
 
 
-#define NUM_MOTOR_DRIVERS 1
-#define MOTOR_DRIVER_1(var) StepperDriver<26,28,24,0,0> var(80,10)
+#define NUM_MOTOR_DRIVERS 1 // 定义使用的电机驱动器的数量为1
+#define MOTOR_DRIVER_1(var) StepperDriver<26,28,24,0,0> var(80,10) // 定义第一个电机驱动器的参数，包括步进引脚，方向引脚，使能引脚，最小限位开关引脚，最大限位开关引脚，每转步数，每毫米步数
 
 
 
-#endif
+#endif // 结束条件编译
 
 /* Below you will find the configuration string, that created this Configuration.h
 
