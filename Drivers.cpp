@@ -115,7 +115,7 @@ void LaserDriver::initialize()
     if(EVENT_INITALIZE_LASER)
     {
 #if LASER_PIN > -1
-        SET_OUTPUT(LASER_PIN);
+        SET_OUTPUT(LASER_PIN);//这里是加热器0 的引脚
 #endif
     }
     changeIntensity(0);
@@ -126,7 +126,7 @@ void LaserDriver::changeIntensity(uint8_t newIntensity)
     {
         // Default implementation
 #if LASER_PIN > -1
-        WRITE(LASER_PIN,(LASER_ON_HIGH ? newIntensity > 199 : newIntensity < 200));
+        WRITE(LASER_PIN,(LASER_ON_HIGH ? newIntensity > 199 : newIntensity < 200));//向激光器的引脚写入一个值，这个值取决于LASER_ON_HIGH和newIntensity的值。LASER_ON_HIGH是一个常量，表示激光器是高电平触发还是低电平触发。newIntensity是一个变量，表示激光器的强度。如果LASER_ON_HIGH为真，那么当newIntensity大于199时，向激光器的引脚写入1，否则写入0。如果LASER_ON_HIGH为假，那么当newIntensity小于200时，向激光器的引脚写入1，否则写入0。这样就可以实现用数字信号控制激光器的开关。
 #endif
     }
 }
