@@ -21,37 +21,37 @@
   Functions in this file are used to communicate using ascii or repetier protocol.
 */
 
-#ifndef MOTION_H_INCLUDED
-#define MOTION_H_INCLUDED
+#ifndef MOTION_H_INCLUDED // 如果没有定义MOTION_H_INCLUDED宏
+#define MOTION_H_INCLUDED // 定义MOTION_H_INCLUDED宏，避免重复包含
 
-/** Marks the first step of a new move */
-#define FLAG_WARMUP 1
-#define FLAG_NOMINAL 2
-#define FLAG_DECELERATING 4
-#define FLAG_ACCELERATION_ENABLED 8 // unused
-#define FLAG_CHECK_ENDSTOPS 16
-#define FLAG_ALL_E_MOTORS 32 // For mixed extruder move all motors instead of selected motor
-#define FLAG_SKIP_DEACCELERATING 64 // unused
-#define FLAG_BLOCKED 128
+/** 标记一个新移动的第一步 */
+#define FLAG_WARMUP 1 // 定义FLAG_WARMUP宏为1，表示移动开始时的预热阶段
+#define FLAG_NOMINAL 2 // 定义FLAG_NOMINAL宏为2，表示移动达到最大速度时的匀速阶段
+#define FLAG_DECELERATING 4 // 定义FLAG_DECELERATING宏为4，表示移动结束时的减速阶段
+#define FLAG_ACCELERATION_ENABLED 8 // 定义FLAG_ACCELERATION_ENABLED宏为8，表示是否启用加速度控制（未使用）
+#define FLAG_CHECK_ENDSTOPS 16 // 定义FLAG_CHECK_ENDSTOPS宏为16，表示是否检查限位开关
+#define FLAG_ALL_E_MOTORS 32 // 定义FLAG_ALL_E_MOTORS宏为32，表示对于混合挤出机移动所有电机而不是选定电机
+#define FLAG_SKIP_DEACCELERATING 64 // 定义FLAG_SKIP_DEACCELERATING宏为64，表示是否跳过减速阶段（未使用）
+#define FLAG_BLOCKED 128 // 定义FLAG_BLOCKED宏为128，表示是否阻塞移动
 
-/** Are the step parameter computed */
-#define FLAG_JOIN_STEPPARAMS_COMPUTED 1
-/** The right speed is fixed. Don't check this block or any block to the left. */
-#define FLAG_JOIN_END_FIXED 2
-/** The left speed is fixed. Don't check left block. */
-#define FLAG_JOIN_START_FIXED 4
-/** Start filament retraction at move start */
-#define FLAG_JOIN_START_RETRACT 8
-/** Wait for filament push back, before ending move */
-#define FLAG_JOIN_END_RETRACT 16
-/** Disable retract for this line */
-#define FLAG_JOIN_NO_RETRACT 32
-/** Wait for the extruder to finish it's up movement */
-#define FLAG_JOIN_WAIT_EXTRUDER_UP 64
-/** Wait for the extruder to finish it's down movement */
-#define FLAG_JOIN_WAIT_EXTRUDER_DOWN 128
-// Printing related data
-#if NONLINEAR_SYSTEM
+/** 步进参数是否已计算 */
+#define FLAG_JOIN_STEPPARAMS_COMPUTED 1 // 定义FLAG_JOIN_STEPPARAMS_COMPUTED宏为1，表示是否已计算步进参数
+/** 右边速度是固定的。不要检查这个块或左边的任何块。 */
+#define FLAG_JOIN_END_FIXED 2 // 定义FLAG_JOIN_END_FIXED宏为2，表示右边速度是固定的
+/** 左边速度是固定的。不要检查左边的块。 */
+#define FLAG_JOIN_START_FIXED 4 // 定义FLAG_JOIN_START_FIXED宏为4，表示左边速度是固定的
+/** 在移动开始时开始丝料回缩 */
+#define FLAG_JOIN_START_RETRACT 8 // 定义FLAG_JOIN_START_RETRACT宏为8，表示在移动开始时开始丝料回缩
+/** 在结束移动之前，等待丝料回推 */
+#define FLAG_JOIN_END_RETRACT 16 // 定义FLAG_JOIN_END_RETRACT宏为16，表示在结束移动之前，等待丝料回推
+/** 禁用这条线的回缩 */
+#define FLAG_JOIN_NO_RETRACT 32 // 定义FLAG_JOIN_NO_RETRACT宏为32，表示禁用这条线的回缩
+/** 等待挤出机完成它的上升运动 */
+#define FLAG_JOIN_WAIT_EXTRUDER_UP 64 // 定义FLAG_JOIN_WAIT_EXTRUDER_UP宏为64，表示等待挤出机完成它的上升运动
+/** 等待挤出机完成它的下降运动 */
+#define FLAG_JOIN_WAIT_EXTRUDER_DOWN 128 // 定义FLAG_JOIN_WAIT_EXTRUDER_DOWN宏为128，表示等待挤出机完成它的下降运动
+// 打印相关数据
+#if NONLINEAR_SYSTEM // 如果定义了NONLINEAR_SYSTEM宏，表示使用非线性系统（如三角洲或SCARA）
 // Allow the delta cache to store segments for every line in line cache. Beware this gets big ... fast.
 
 class PrintLine;
@@ -167,44 +167,45 @@ class PrintLine   // RAM usage: 24*4+15 = 113 Byte
     static volatile bool nlFlag;
 #endif
 public:
-    static ufast8_t linesPos; // Position for executing line movement
-    static PrintLine lines[];
-    static ufast8_t linesWritePos; // Position where we write the next cached line move
-    ufast8_t joinFlags;
-    volatile ufast8_t flags;
-    uint8_t secondSpeed; // for laser intensity or fan control
+    static ufast8_t linesPos; // Position for executing line movement // 执行线段移动的位置
+    static PrintLine lines[]; // 静态数组，存储缓存的线段对象
+    static ufast8_t linesWritePos; // Position where we write the next cached line move // 写入下一个缓存线段移动的位置
+    ufast8_t joinFlags; // 用于标记线段之间的连接状态和特性的标志位
+    volatile ufast8_t flags; // 用于标记线段的移动状态和特性的标志位
+    uint8_t secondSpeed; // for laser intensity or fan control // 用于激光强度或风扇控制的第二速度
 private:
-    fast8_t primaryAxis;
-    ufast8_t dir;                       ///< Direction of movement. 1 = X+, 2 = Y+, 4= Z+, values can be combined.
-    int32_t timeInTicks;
-    int32_t delta[E_AXIS_ARRAY];                  ///< Steps we want to move.
-    int32_t error[E_AXIS_ARRAY];                  ///< Error calculation for Bresenham algorithm
-    float speedX;                   ///< Speed in x direction at fullInterval in mm/s
-    float speedY;                   ///< Speed in y direction at fullInterval in mm/s
-    float speedZ;                   ///< Speed in z direction at fullInterval in mm/s
-    float speedE;                   ///< Speed in E direction at fullInterval in mm/s
-    float fullSpeed;                ///< Desired speed mm/s
-    float invFullSpeed;             ///< 1.0/fullSpeed for faster computation
-    float accelerationDistance2;    ///< Real 2.0*distance*acceleration mm²/s²
-    float maxJunctionSpeed;         ///< Max. junction speed between this and next segment
-    float startSpeed;               ///< Starting speed in mm/s
-    float endSpeed;                 ///< Exit speed in mm/s
+    fast8_t primaryAxis; // 主要的移动轴，取决于哪个轴的步数最多
+    ufast8_t dir;                       ///< Direction of movement. 1 = X+, 2 = Y+, 4= Z+, values can be combined. // 移动方向。1 = X+，2 = Y+，4 = Z+，值可以组合。
+    int32_t timeInTicks; // 线段移动所需的总时间，以时钟周期为单位
+    int32_t delta[E_AXIS_ARRAY];                  ///< Steps we want to move. // 我们想要移动的步数。
+    int32_t error[E_AXIS_ARRAY];                  ///< Error calculation for Bresenham algorithm // Bresenham算法的误差计算
+    float speedX;                   ///< Speed in x direction at fullInterval in mm/s // 在fullInterval时x方向的速度，以mm/s为单位
+    float speedY;                   ///< Speed in y direction at fullInterval in mm/s // 在fullInterval时y方向的速度，以mm/s为单位
+    float speedZ;                   ///< Speed in z direction at fullInterval in mm/s // 在fullInterval时z方向的速度，以mm/s为单位
+    float speedE;                   ///< Speed in E direction at fullInterval in mm/s // 在fullInterval时E方向的速度，以mm/s为单位
+    float fullSpeed;                ///< Desired speed mm/s // 期望的速度，以mm/s为单位
+    float invFullSpeed;             ///< 1.0/fullSpeed for faster computation // 1.0/fullSpeed，用于更快的计算
+    float accelerationDistance2;    ///< Real 2.0*distance*acceleration mm²/s² // 真实的2.0*distance*acceleration，以mm²/s²为单位
+    float maxJunctionSpeed;         ///< Max. junction speed between this and next segment // 这个和下一个线段之间的最大连接速度
+    float startSpeed;               ///< Starting speed in mm/s // 起始速度，以mm/s为单位
+    float endSpeed;                 ///< Exit speed in mm/s // 结束速度，以mm/s为单位
     float minSpeed;
-    float distance;
-#if NONLINEAR_SYSTEM
-    uint8_t numNonlinearSegments;		///< Number of delta segments left in line. Decremented by stepper timer.
-    uint8_t moveID;					///< ID used to identify moves which are all part of the same line
-    int32_t numPrimaryStepPerSegment;	///< Number of primary Bresenham axis steps in each delta segment
-    NonlinearSegment segments[DELTASEGMENTS_PER_PRINTLINE];
+    float distance; // 线段移动的距离，以mm为单位
+#if NONLINEAR_SYSTEM // 如果定义了NONLINEAR_SYSTEM宏，表示使用非线性系统（如三角洲或SCARA）
+    uint8_t numNonlinearSegments;		///< Number of delta segments left in line. Decremented by stepper timer. // 线段中剩余的三角洲分段数。由步进定时器递减。
+    uint8_t moveID;					///< ID used to identify moves which are all part of the same line // 用于识别属于同一条线的所有移动的ID
+    int32_t numPrimaryStepPerSegment;	///< Number of primary Bresenham axis steps in each delta segment // 每个三角洲分段中主要Bresenham轴步数
+    NonlinearSegment segments[DELTASEGMENTS_PER_PRINTLINE]; // 非线性分段数组，存储每个分段的位置和速度信息
 #endif
-    ticks_t fullInterval;     ///< interval at full speed in ticks/step.
-    uint16_t accelSteps;        ///< How much steps does it take, to reach the plateau.
-    uint16_t decelSteps;        ///< How much steps does it take, to reach the end speed.
-    uint32_t accelerationPrim; ///< Acceleration along primary axis
-    uint32_t fAcceleration;    ///< accelerationPrim*262144/F_CPU
-    speed_t vMax;              ///< Maximum reached speed in steps/s.
-    speed_t vStart;            ///< Starting speed in steps/s.
-    speed_t vEnd;              ///< End speed in steps/s
+    ticks_t fullInterval;     ///< interval at full speed in ticks/step. // 在全速时的间隔，以时钟周期/步为单位。
+    uint16_t accelSteps;        ///< How much steps does it take, to reach the plateau. // 达到平台速度需要多少步。
+    uint16_t decelSteps;        ///< How much steps does it take, to reach the end speed. // 达到结束速度需要多少步。
+    uint32_t accelerationPrim; ///< Acceleration along primary axis // 沿着主要轴的加速度
+    uint32_t fAcceleration;    ///< accelerationPrim*262144/F_CPU // 加速度乘以一个系数，用于更快的计算
+    speed_t vMax;              ///< Maximum reached speed in steps/s. // 达到的最大速度，以步/秒为单位。
+    speed_t vStart;            ///< Starting speed in steps/s. // 起始速度，以步/秒为单位。
+    speed_t vEnd;              ///< End speed in steps/s // 结束速度，以步/秒为单位
+
 #if USE_ADVANCE
 #if ENABLE_QUADRATIC_ADVANCE
     int32_t advanceRate;               ///< Advance steps at full speed
@@ -218,124 +219,125 @@ private:
     int32_t totalStepsRemaining;
 #endif
 public:
-    int32_t stepsRemaining;            ///< Remaining steps, until move is finished
-    static PrintLine *cur;
-    static volatile ufast8_t linesCount; // Number of lines cached 0 = nothing to do
+    int32_t stepsRemaining;            ///< Remaining steps, until move is finished // 移动完成前剩余的步数
+    static PrintLine *cur; // 静态指针，指向当前正在执行的线段对象
+    static volatile ufast8_t linesCount; // Number of lines cached 0 = nothing to do // 缓存的线段数，0 = 没有要做的事情
     inline bool areParameterUpToDate()
     {
-        return joinFlags & FLAG_JOIN_STEPPARAMS_COMPUTED;
+        return joinFlags & FLAG_JOIN_STEPPARAMS_COMPUTED; // 返回是否已计算步进参数的布尔值
     }
     inline void invalidateParameter()
     {
-        joinFlags &= ~FLAG_JOIN_STEPPARAMS_COMPUTED;
+        joinFlags &= ~FLAG_JOIN_STEPPARAMS_COMPUTED; // 将步进参数计算标志位清零，表示需要重新计算
     }
     inline void setParameterUpToDate()
     {
-        joinFlags |= FLAG_JOIN_STEPPARAMS_COMPUTED;
+        joinFlags |= FLAG_JOIN_STEPPARAMS_COMPUTED; // 将步进参数计算标志位置一，表示已经计算
     }
     inline bool isStartSpeedFixed()
     {
-        return joinFlags & FLAG_JOIN_START_FIXED;
+        return joinFlags & FLAG_JOIN_START_FIXED; // 返回起始速度是否固定的布尔值
     }
     inline void setStartSpeedFixed(bool newState)
     {
-        joinFlags = (newState ? joinFlags | FLAG_JOIN_START_FIXED : joinFlags & ~FLAG_JOIN_START_FIXED);
+        joinFlags = (newState ? joinFlags | FLAG_JOIN_START_FIXED : joinFlags & ~FLAG_JOIN_START_FIXED); // 根据新状态设置起始速度固定标志位
     }
     inline void fixStartAndEndSpeed()
     {
-        joinFlags |= FLAG_JOIN_END_FIXED | FLAG_JOIN_START_FIXED;
+        joinFlags |= FLAG_JOIN_END_FIXED | FLAG_JOIN_START_FIXED; // 将起始速度和结束速度固定标志位都置一，表示不需要调整
     }
     inline bool isEndSpeedFixed()
     {
-        return joinFlags & FLAG_JOIN_END_FIXED;
+        return joinFlags & FLAG_JOIN_END_FIXED; // 返回结束速度是否固定的布尔值
     }
     inline void setEndSpeedFixed(bool newState)
     {
-        joinFlags = (newState ? joinFlags | FLAG_JOIN_END_FIXED : joinFlags & ~FLAG_JOIN_END_FIXED);
+        joinFlags = (newState ? joinFlags | FLAG_JOIN_END_FIXED : joinFlags & ~FLAG_JOIN_END_FIXED); // 根据新状态设置结束速度固定标志位
     }
     inline bool isWarmUp()
     {
-        return flags & FLAG_WARMUP;
+        return flags & FLAG_WARMUP; // 返回是否是预热阶段的布尔值
     }
     inline uint8_t getWaitForXLinesFilled()
     {
-        return primaryAxis;
+        return primaryAxis; // 返回等待填充的线段数（用primaryAxis变量暂存）
     }
     inline void setWaitForXLinesFilled(uint8_t b)
     {
-        primaryAxis = b;
+        primaryAxis = b; // 设置等待填充的线段数（用primaryAxis变量暂存）
     }
     inline bool isExtruderForwardMove()
     {
-        return (dir & E_STEP_DIRPOS)==E_STEP_DIRPOS;
+        return (dir & E_STEP_DIRPOS)==E_STEP_DIRPOS; // 返回挤出机是否是正向移动的布尔值（根据dir变量中的E_STEP_DIRPOS位判断）
     }
     inline void block()
     {
-        flags |= FLAG_BLOCKED;
+        flags |= FLAG_BLOCKED; // 将阻塞标志位置一，表示线段不能执行
     }
     inline void unblock()
     {
-        flags &= ~FLAG_BLOCKED;
+        flags &= ~FLAG_BLOCKED; // 将阻塞标志位清零，表示线段可以执行
     }
     inline bool isBlocked()
     {
-        return flags & FLAG_BLOCKED;
+        return flags & FLAG_BLOCKED; // 返回线段是否被阻塞的布尔值
     }
     inline bool isAllEMotors() {
-        return flags & FLAG_ALL_E_MOTORS;
+        return flags & FLAG_ALL_E_MOTORS; // 返回是否移动所有挤出机电机的布尔值（对于混合挤出机）
     }
     inline bool isCheckEndstops()
     {
-        return flags & FLAG_CHECK_ENDSTOPS;
+        return flags & FLAG_CHECK_ENDSTOPS; // 返回是否检查限位开关的布尔值
     }
     inline bool isNominalMove()
     {
-        return flags & FLAG_NOMINAL;
+        return flags & FLAG_NOMINAL; // 返回是否是匀速移动的布尔值
     }
     inline void setNominalMove()
     {
-        flags |= FLAG_NOMINAL;
+        flags |= FLAG_NOMINAL; // 将匀速移动标志位置一，表示达到最大速度
     }
+	// 检查限位开关的函数，如果触发了限位开关，就停止相应的轴的移动
     inline void checkEndstops()
     {
-        if(isCheckEndstops())
+        if(isCheckEndstops()) // 如果需要检查限位开关
         {
-			Endstops::update();
-            if(isXNegativeMove() && Endstops::xMin())
-                setXMoveFinished();
-            else if(isXPositiveMove() && Endstops::xMax())
-                setXMoveFinished();
-            if(isYNegativeMove() && Endstops::yMin())
-                setYMoveFinished();
-            else if(isYPositiveMove() && Endstops::yMax())
-                setYMoveFinished();
-#if FEATURE_Z_PROBE
-            if(Printer::isZProbingActive() && isZNegativeMove() && Endstops::zProbe())
+			Endstops::update(); // 更新限位开关的状态
+            if(isXNegativeMove() && Endstops::xMin()) // 如果是X轴负向移动并且触发了X轴最小限位开关
+                setXMoveFinished(); // 停止X轴的移动
+            else if(isXPositiveMove() && Endstops::xMax()) // 如果是X轴正向移动并且触发了X轴最大限位开关
+                setXMoveFinished(); // 停止X轴的移动
+            if(isYNegativeMove() && Endstops::yMin()) // 如果是Y轴负向移动并且触发了Y轴最小限位开关
+                setYMoveFinished(); // 停止Y轴的移动
+            else if(isYPositiveMove() && Endstops::yMax()) // 如果是Y轴正向移动并且触发了Y轴最大限位开关
+                setYMoveFinished(); // 停止Y轴的移动
+#if FEATURE_Z_PROBE // 如果启用了Z探针功能
+            if(Printer::isZProbingActive() && isZNegativeMove() && Endstops::zProbe()) // 如果正在进行Z探针活动并且是Z轴负向移动并且触发了Z探针
             {
-                setZMoveFinished();
-                Printer::stepsRemainingAtZHit = stepsRemaining;
+                setZMoveFinished(); // 停止Z轴的移动
+                Printer::stepsRemainingAtZHit = stepsRemaining; // 记录Z探针触发时剩余的步数
             }
             else
 #endif
-                if(isZNegativeMove() && Endstops::zMin())
+                if(isZNegativeMove() && Endstops::zMin()) // 如果是Z轴负向移动并且触发了Z轴最小限位开关
                 {
-                    setZMoveFinished();
+                    setZMoveFinished(); // 停止Z轴的移动
                 }
-                else if(isZPositiveMove() && Endstops::zMax())
+                else if(isZPositiveMove() && Endstops::zMax()) // 如果是Z轴正向移动并且触发了Z轴最大限位开关
                 {
-#if MAX_HARDWARE_ENDSTOP_Z
-                    Printer::stepsRemainingAtZHit = stepsRemaining;
+#if MAX_HARDWARE_ENDSTOP_Z // 如果启用了Z轴最大硬件限位开关
+                    Printer::stepsRemainingAtZHit = stepsRemaining; // 记录Z轴最大限位开关触发时剩余的步数
 #endif
-                    setZMoveFinished();
+                    setZMoveFinished(); // 停止Z轴的移动
                 }
         }
-#if FEATURE_Z_PROBE
-        else if(Printer::isZProbingActive() && isZNegativeMove()) {
-			Endstops::update();
-			if(Endstops::zProbe())
+#if FEATURE_Z_PROBE // 如果启用了Z探针功能
+        else if(Printer::isZProbingActive() && isZNegativeMove()) { // 如果正在进行Z探针活动并且是Z轴负向移动
+			Endstops::update(); // 更新限位开关的状态
+			if(Endstops::zProbe()) // 如果触发了Z探针
 			{
-				setZMoveFinished();
-				Printer::stepsRemainingAtZHit = stepsRemaining;
+				setZMoveFinished(); // 停止Z轴的移动
+				Printer::stepsRemainingAtZHit = stepsRemaining; // 记录Z探针触发时剩余的步数
 			}
         }
 #endif

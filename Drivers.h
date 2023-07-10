@@ -109,6 +109,9 @@ By default all intensities > 200 are always on, and lower values are always off.
 this with a programmed event EVENT_SET_LASER(intensity) that return false to signal the default
 implementation that it has set it's value already.
 EVENT_INITALIZE_LASER should return false to prevent default initialization.
+如果你启用了激光支持，你可以用一个激光器来替换一个挤出机。激光器是由一个数字引脚来控制的。
+默认情况下，所有强度大于200的值都表示激光器一直开启，所有强度小于200的值都表示激光器一直关闭。你可以用一个自定义的事件EVENT_SET_LASER(intensity)来覆盖这个行为，这个事件接受一个强度参数，并且返回false来表示它已经设置了激光器的值，不需要使用默认的实现。
+EVENT_INITALIZE_LASER是一个用来初始化激光器的事件，它应该返回false来阻止默认的初始化。
 */
 class LaserDriver {
 public:

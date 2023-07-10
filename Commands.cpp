@@ -855,27 +855,27 @@ extern bool runBedLeveling(GCode *com);
 /**
 \brief Execute the G command stored in com.
 */
-void Commands::processGCode(GCode *com) {
-    uint32_t codenum; //throw away variable
-    switch(com->G) {
-        case 0: // G0 -> G1
-        case 1: // G1
-#if defined(SUPPORT_LASER) && SUPPORT_LASER
+void Commands::processGCode(GCode *com) {//处理Gcode
+    uint32_t codenum; //throw away variable // 定义一个无符号32位整数变量，用于临时存储指令编号
+    switch(com->G) { // 根据指令的G参数（表示指令类型）进行分支判断
+        case 0: // G0 -> G1 // 如果是G0指令，转换为G1指令（两者的功能相同，都是直线插补）
+        case 1: // G1 // 如果是G1指令
+#if defined(SUPPORT_LASER) && SUPPORT_LASER // 如果定义了支持激光的宏，并且激光功能开启
             {
                 // disable laser for G0 moves
-                bool laserOn = LaserDriver::laserOn;
-                if(com->G == 0 && Printer::mode == PRINTER_MODE_LASER) {
-                    LaserDriver::laserOn = false;
+                bool laserOn = LaserDriver::laserOn; // 定义一个布尔变量，存储激光驱动器的状态
+                if(com->G == 0 && Printer::mode == PRINTER_MODE_LASER) { // 如果是G0指令，并且打印机模式是激光模式
+                    LaserDriver::laserOn = false; // 关闭激光驱动器
                 }
 #endif // defined
-                if(com->hasS()) Printer::setNoDestinationCheck(com->S != 0);
-                if(Printer::setDestinationStepsFromGCode(com)) // For X Y Z E F
-#if NONLINEAR_SYSTEM
-                    if (!PrintLine::queueNonlinearMove(ALWAYS_CHECK_ENDSTOPS, true, true)) {
-                        Com::printWarningFLN(PSTR("executeGCode / queueDeltaMove returns error"));
+                if(com->hasS()) Printer::setNoDestinationCheck(com->S != 0); // 如果指令有S参数，调用Printer类的setNoDestinationCheck方法，根据S参数的值（非零为真，零为假）设置是否检查目标位置的标志位
+                if(Printer::setDestinationStepsFromGCode(com)) // For X Y Z E F // 调用Printer类的setDestinationStepsFromGCode方法，根据指令的X、Y、Z、E、F参数（表示坐标和进给速度）设置目标位置的步数，如果成功返回真值
+#if NONLINEAR_SYSTEM // 如果是非线性系统（如三角洲或SCARA）
+                    if (!PrintLine::queueNonlinearMove(ALWAYS_CHECK_ENDSTOPS, true, true)) { // 调用PrintLine类的queueNonlinearMove方法，将当前位置和目标位置之间的非线性运动加入到运动队列中，如果失败返回假值。参数分别表示是否始终检查限位开关、是否计算加速度、是否使用挤出机
+                        Com::printWarningFLN(PSTR("executeGCode / queueDeltaMove returns error")); // 调用Com类的printWarningFLN方法，打印一条警告信息，表示执行G代码或者加入非线性运动时发生错误
                     }
-#else
-                    PrintLine::queueCartesianMove(ALWAYS_CHECK_ENDSTOPS, true);
+#else // 如果是线性系统（如笛卡尔或芯片）
+                    PrintLine::queueCartesianMove(ALWAYS_CHECK_ENDSTOPS, true); // 调用PrintLine类的queueCartesianMove方法，将当前位置和目标位置之间的直线运动加入到运动队列中。参数分别表示是否始终检查限位开关、是否计算加速度
 #endif
 #if UI_HAS_KEYS
                 // ui can only execute motion commands if we are not waiting inside a move for an

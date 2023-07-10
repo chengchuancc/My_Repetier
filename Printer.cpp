@@ -655,28 +655,29 @@ void Printer::setOrigin(float xOff, float yOff, float zOff)
     coordinateOffset[Z_AXIS] = zOff;
 }
 
-/** Computes currentPosition from currentPositionSteps including correction for offset. */
+// 定义一个函数，根据当前位置的步数，更新当前位置的坐标，并选择是否复制到上一条命令的位置
 void Printer::updateCurrentPosition(bool copyLastCmd)
 {
-    currentPosition[X_AXIS] = static_cast<float>(currentPositionSteps[X_AXIS]) * invAxisStepsPerMM[X_AXIS];
-    currentPosition[Y_AXIS] = static_cast<float>(currentPositionSteps[Y_AXIS]) * invAxisStepsPerMM[Y_AXIS];
-#if NONLINEAR_SYSTEM	
-    currentPosition[Z_AXIS] = static_cast<float>(currentPositionSteps[Z_AXIS]) * invAxisStepsPerMM[Z_AXIS];
-#else
-    currentPosition[Z_AXIS] = static_cast<float>(currentPositionSteps[Z_AXIS] - zCorrectionStepsIncluded) * invAxisStepsPerMM[Z_AXIS];
+    currentPosition[X_AXIS] = static_cast<float>(currentPositionSteps[X_AXIS]) * invAxisStepsPerMM[X_AXIS]; // 将当前位置的X轴步数乘以每步的毫米数，转换为浮点型，赋值给当前位置的X轴坐标
+    currentPosition[Y_AXIS] = static_cast<float>(currentPositionSteps[Y_AXIS]) * invAxisStepsPerMM[Y_AXIS]; // 将当前位置的Y轴步数乘以每步的毫米数，转换为浮点型，赋值给当前位置的Y轴坐标
+#if NONLINEAR_SYSTEM	// 如果是非线性系统
+    currentPosition[Z_AXIS] = static_cast<float>(currentPositionSteps[Z_AXIS]) * invAxisStepsPerMM[Z_AXIS]; // 将当前位置的Z轴步数乘以每步的毫米数，转换为浮点型，赋值给当前位置的Z轴坐标
+#else // 如果不是非线性系统
+    currentPosition[Z_AXIS] = static_cast<float>(currentPositionSteps[Z_AXIS] - zCorrectionStepsIncluded) * invAxisStepsPerMM[Z_AXIS]; // 将当前位置的Z轴步数减去包含的Z轴修正步数，乘以每步的毫米数，转换为浮点型，赋值给当前位置的Z轴坐标
 #endif	
    transformFromPrinter(currentPosition[X_AXIS], currentPosition[Y_AXIS], currentPosition[Z_AXIS],
-                        currentPosition[X_AXIS], currentPosition[Y_AXIS], currentPosition[Z_AXIS]);
-    currentPosition[X_AXIS] -= Printer::offsetX;
-    currentPosition[Y_AXIS] -= Printer::offsetY;
-    currentPosition[Z_AXIS] -= Printer::offsetZ;
-    if(copyLastCmd)
+                        currentPosition[X_AXIS], currentPosition[Y_AXIS], currentPosition[Z_AXIS]); // 将当前位置的坐标从打印机坐标系转换为用户坐标系，并赋值给当前位置的坐标
+    currentPosition[X_AXIS] -= Printer::offsetX; // 将当前位置的X轴坐标减去打印机的X轴偏移量
+    currentPosition[Y_AXIS] -= Printer::offsetY; // 将当前位置的Y轴坐标减去打印机的Y轴偏移量
+    currentPosition[Z_AXIS] -= Printer::offsetZ; // 将当前位置的Z轴坐标减去打印机的Z轴偏移量
+    if(copyLastCmd) // 如果参数为true
     {
-        lastCmdPos[X_AXIS] = currentPosition[X_AXIS];
-        lastCmdPos[Y_AXIS] = currentPosition[Y_AXIS];
-        lastCmdPos[Z_AXIS] = currentPosition[Z_AXIS];
+        lastCmdPos[X_AXIS] = currentPosition[X_AXIS]; // 将当前位置的X轴坐标赋值给上一条命令的X轴坐标
+        lastCmdPos[Y_AXIS] = currentPosition[Y_AXIS]; // 将当前位置的Y轴坐标赋值给上一条命令的Y轴坐标
+        lastCmdPos[Z_AXIS] = currentPosition[Z_AXIS]; // 将当前位置的Z轴坐标赋值给上一条命令的Z轴坐标
     }
 }
+
 
 /**
   \brief Sets the destination coordinates to values stored in com.
@@ -687,76 +688,78 @@ void Printer::updateCurrentPosition(bool copyLastCmd)
   - Offset in x and y direction for multiple extruder support.
 */
 
+// 定义一个函数，根据GCode命令设置打印机的目标步数
 uint8_t Printer::setDestinationStepsFromGCode(GCode *com)
 {
-    register int32_t p;
-    float x, y, z;
-#if FEATURE_RETRACTION
-    if(com->hasNoXYZ() && com->hasE() && isAutoretract()) { // convert into auto retract
-        if(relativeCoordinateMode || relativeExtruderCoordinateMode) {
-            Extruder::current->retract(com->E < 0,false);
+    register int32_t p; // 定义一个整型变量p
+    float x, y, z; // 定义三个浮点型变量x, y, z
+#if FEATURE_RETRACTION // 如果启用了回缩功能
+    if(com->hasNoXYZ() && com->hasE() && isAutoretract()) { // 如果GCode命令没有XYZ坐标，但有E坐标，并且是自动回缩模式
+        if(relativeCoordinateMode || relativeExtruderCoordinateMode) { // 如果是相对坐标模式或者相对挤出机坐标模式
+            Extruder::current->retract(com->E < 0,false); // 根据E坐标的正负，执行回缩或者恢复操作，不更新E坐标
         } else {
-            p = convertToMM(com->E * axisStepsPerMM[E_AXIS]); // current position
-            Extruder::current->retract(com->E < p,false);
+            p = convertToMM(com->E * axisStepsPerMM[E_AXIS]); // 将E坐标的步数转换为毫米
+            Extruder::current->retract(com->E < p,false); // 根据E坐标的大小，执行回缩或者恢复操作，不更新E坐标
         }
-        return 0; // Fake no move so nothing gets added
+        return 0; // 返回0，表示没有移动，不需要添加任何操作
     }
 #endif
-    if(!relativeCoordinateMode)
+     if(!relativeCoordinateMode) // 如果不是相对坐标模式
     {
-        if(com->hasX()) lastCmdPos[X_AXIS] = currentPosition[X_AXIS] = convertToMM(com->X) - coordinateOffset[X_AXIS];
-        if(com->hasY()) lastCmdPos[Y_AXIS] = currentPosition[Y_AXIS] = convertToMM(com->Y) - coordinateOffset[Y_AXIS];
-        if(com->hasZ()) lastCmdPos[Z_AXIS] = currentPosition[Z_AXIS] = convertToMM(com->Z) - coordinateOffset[Z_AXIS];
+        if(com->hasX()) lastCmdPos[X_AXIS] = currentPosition[X_AXIS] = convertToMM(com->X) - coordinateOffset[X_AXIS]; // 如果GCode命令有X坐标，将其转换为毫米，并减去偏移量，赋值给当前位置和上一条命令的位置
+        if(com->hasY()) lastCmdPos[Y_AXIS] = currentPosition[Y_AXIS] = convertToMM(com->Y) - coordinateOffset[Y_AXIS]; // 如果GCode命令有Y坐标，将其转换为毫米，并减去偏移量，赋值给当前位置和上一条命令的位置
+        if(com->hasZ()) lastCmdPos[Z_AXIS] = currentPosition[Z_AXIS] = convertToMM(com->Z) - coordinateOffset[Z_AXIS]; // 如果GCode命令有Z坐标，将其转换为毫米，并减去偏移量，赋值给当前位置和上一条命令的位置
     }
-    else
+    else // 如果是相对坐标模式
     {
-        if(com->hasX()) currentPosition[X_AXIS] = (lastCmdPos[X_AXIS] += convertToMM(com->X));
-        if(com->hasY()) currentPosition[Y_AXIS] = (lastCmdPos[Y_AXIS] += convertToMM(com->Y));
-        if(com->hasZ()) currentPosition[Z_AXIS] = (lastCmdPos[Z_AXIS] += convertToMM(com->Z));
+        if(com->hasX()) currentPosition[X_AXIS] = (lastCmdPos[X_AXIS] += convertToMM(com->X)); // 如果GCode命令有X坐标，将其转换为毫米，并加到上一条命令的位置上，赋值给当前位置
+        if(com->hasY()) currentPosition[Y_AXIS] = (lastCmdPos[Y_AXIS] += convertToMM(com->Y)); // 如果GCode命令有Y坐标，将其转换为毫米，并加到上一条命令的位置上，赋值给当前位置
+        if(com->hasZ()) currentPosition[Z_AXIS] = (lastCmdPos[Z_AXIS] += convertToMM(com->Z)); // 如果GCode命令有Z坐标，将其转换为毫米，并加到上一条命令的位置上，赋值给当前位置
     }
-    transformToPrinter(lastCmdPos[X_AXIS] + Printer::offsetX, lastCmdPos[Y_AXIS] + Printer::offsetY, lastCmdPos[Z_AXIS] +  Printer::offsetZ, x, y, z);
-    destinationSteps[X_AXIS] = static_cast<int32_t>(floor(x * axisStepsPerMM[X_AXIS] + 0.5f));
-    destinationSteps[Y_AXIS] = static_cast<int32_t>(floor(y * axisStepsPerMM[Y_AXIS] + 0.5f));
-    destinationSteps[Z_AXIS] = static_cast<int32_t>(floor(z * axisStepsPerMM[Z_AXIS] + 0.5f));
-    if(com->hasE() && !Printer::debugDryrun())
+    transformToPrinter(lastCmdPos[X_AXIS] + Printer::offsetX, lastCmdPos[Y_AXIS] + Printer::offsetY, lastCmdPos[Z_AXIS] +  Printer::offsetZ, x, y, z); // 将上一条命令的位置加上打印机的偏移量，并转换为打印机的坐标系，赋值给x, y, z变量
+    destinationSteps[X_AXIS] = static_cast<int32_t>(floor(x * axisStepsPerMM[X_AXIS] + 0.5f)); // 将x变量乘以每毫米的步数，并四舍五入取整，赋值给目标步数的X轴
+    destinationSteps[Y_AXIS] = static_cast<int32_t>(floor(y * axisStepsPerMM[Y_AXIS] + 0.5f)); // 将y变量乘以每毫米的步数，并四舍五入取整，赋值给目标步数的Y轴
+    destinationSteps[Z_AXIS] = static_cast<int32_t>(floor(z * axisStepsPerMM[Z_AXIS] + 0.5f)); // 将z变量乘以每毫米的步数，并四舍五入取整，赋值给目标步数的Z轴
+    if(com->hasE() && !Printer::debugDryrun()) // 如果GCode命令有E坐标，并且不是空运行模式
     {
-        p = convertToMM(com->E * axisStepsPerMM[E_AXIS]);
+        p = convertToMM(com->E * axisStepsPerMM[E_AXIS]); // 将E坐标的步数转换为毫米
 
-        if(relativeCoordinateMode || relativeExtruderCoordinateMode)
+        if(relativeCoordinateMode || relativeExtruderCoordinateMode) // 如果是相对坐标模式或者相对挤出机坐标模式
         {
             if(
-#if MIN_EXTRUDER_TEMP > 20
-                (Extruder::current->tempControl.currentTemperatureC < MIN_EXTRUDER_TEMP && !Printer::isColdExtrusionAllowed()) ||
+#if MIN_EXTRUDER_TEMP > 20 // 如果最低挤出机温度大于20度
+                (Extruder::current->tempControl.currentTemperatureC < MIN_EXTRUDER_TEMP && !Printer::isColdExtrusionAllowed()) || // 如果当前挤出机温度低于最低温度，并且不允许冷挤出
 #endif
-                fabs(com->E) * extrusionFactor > EXTRUDE_MAXLENGTH)
-                p = 0;
-            destinationSteps[E_AXIS] = currentPositionSteps[E_AXIS] + p;
+                fabs(com->E) * extrusionFactor > EXTRUDE_MAXLENGTH) // 或者GCode命令的E坐标绝对值乘以挤出因子大于最大挤出长度
+                p = 0; // 将p赋值为0
+            destinationSteps[E_AXIS] = currentPositionSteps[E_AXIS] + p; // 将当前位置的步数加上p，赋值给目标步数的E轴
         }
-        else
+        else // 如果不是相对坐标模式或者相对挤出机坐标模式
         {
             if(
-#if MIN_EXTRUDER_TEMP > 20
-                (Extruder::current->tempControl.currentTemperatureC < MIN_EXTRUDER_TEMP  && !Printer::isColdExtrusionAllowed()) ||
+#if MIN_EXTRUDER_TEMP > 20 // 如果最低挤出机温度大于20度
+                (Extruder::current->tempControl.currentTemperatureC < MIN_EXTRUDER_TEMP  && !Printer::isColdExtrusionAllowed()) || // 如果当前挤出机温度低于最低温度，并且不允许冷挤出
 #endif
-                fabs(p - currentPositionSteps[E_AXIS]) * extrusionFactor > EXTRUDE_MAXLENGTH * axisStepsPerMM[E_AXIS])
-                currentPositionSteps[E_AXIS] = p;
-            destinationSteps[E_AXIS] = p;
+                fabs(p - currentPositionSteps[E_AXIS]) * extrusionFactor > EXTRUDE_MAXLENGTH * axisStepsPerMM[E_AXIS]) // 或者p减去当前位置的步数的绝对值乘以挤出因子大于最大挤出长度乘以每毫米的步数
+                currentPositionSteps[E_AXIS] = p; // 将p赋值给当前位置的步数
+            destinationSteps[E_AXIS] = p; // 将p赋值给目标步数的E轴
         }
     }
-    else Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS];
-    if(com->hasF())
+    else Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS]; // 否则，将当前位置的步数赋值给目标步数的E轴
+    if(com->hasF()) // 如果GCode命令有F参数（进给速率）
     {
-        if(unitIsInches)
-            feedrate = com->F * 0.0042333f * (float)feedrateMultiply;  // Factor is 25.5/60/100
-        else
-            feedrate = com->F * (float)feedrateMultiply * 0.00016666666f;
+        if(unitIsInches) // 如果单位是英寸
+            feedrate = com->F * 0.0042333f * (float)feedrateMultiply;  // 将F参数乘以一个转换因子和进给速率倍率，赋值给进给速率变量
+        else // 如果单位是毫米
+            feedrate = com->F * (float)feedrateMultiply * 0.00016666666f; // 将F参数乘以一个转换因子和进给速率倍率，赋值给进给速率变量
     }
-    if(!Printer::isPositionAllowed(lastCmdPos[X_AXIS], lastCmdPos[Y_AXIS], lastCmdPos[Z_AXIS]))
+    if(!Printer::isPositionAllowed(lastCmdPos[X_AXIS], lastCmdPos[Y_AXIS], lastCmdPos[Z_AXIS])) // 如果上一条命令的位置不在打印范围内
     {
-        currentPositionSteps[E_AXIS] = destinationSteps[E_AXIS];
-        return false; // ignore move
+        currentPositionSteps[E_AXIS] = destinationSteps[E_AXIS]; // 将目标步数的E轴赋值给当前位置的步数
+        return false; // 返回false，表示忽略这
     }
-    return !com->hasNoXYZ() || (com->hasE() && destinationSteps[E_AXIS] != currentPositionSteps[E_AXIS]); // ignore unproductive moves
+    return !com->hasNoXYZ() || (com->hasE() && destinationSteps[E_AXIS] != currentPositionSteps[E_AXIS]); // 返回一个布尔值，表示是否有有效的移动，如果GCode命令有XYZ坐标，或者有E坐标并且目标步数和当前步数不相等，就返回true，否则返回false
+
 }
 
 void Printer::setup()

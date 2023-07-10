@@ -44,7 +44,7 @@
 // ################ 结束手动设置 ##########################
 
 #undef FAN_BOARD_PIN //取消定义风扇引脚
-#define FAN_BOARD_PIN -1 //将风扇引脚设为-1，表示没有连接
+#define FAN_BOARD_PIN 9 //将风扇引脚设为-1，表示没有连接
 #define BOARD_FAN_SPEED 255 //将风扇速度设为255，表示最大速度
 #define FAN_THERMO_PIN -1 //将风扇温度传感器引脚设为-1，表示没有连接
 #define FAN_THERMO_MIN_PWM 128 //将风扇温度传感器的最小PWM值设为128，表示最小占空比
@@ -64,9 +64,9 @@
 #define MIXING_EXTRUDER 0 //混合挤出机的数量为 ·0 
 
 #define DRIVE_SYSTEM 1 //定义驱动器系统，1表示corexy结构
-#define XAXIS_STEPS_PER_MM 160 //定义X轴每毫米的步数为80(16细分)160（32细分）
-#define YAXIS_STEPS_PER_MM 160 //定义Y轴每毫米的步数为80（16细分）160（32细分）
-#define ZAXIS_STEPS_PER_MM 80 //定义Z轴每毫米的步数为80（16细分）160（32细分）
+#define XAXIS_STEPS_PER_MM 320 //定义X轴每毫米的步数为80(16细分)160（32细分）
+#define YAXIS_STEPS_PER_MM 320 //定义Y轴每毫米的步数为80（16细分）160（32细分）
+#define ZAXIS_STEPS_PER_MM 800 //定义Z轴每毫米的步数为80（16细分）160（32细分）
 #define EXTRUDER_FAN_COOL_TEMP 50 // 定义挤出机风扇开启的温度为50摄氏度
 #define PDM_FOR_EXTRUDER 0 // 定义挤出机是否使用PDM（脉冲密度调制）控制，0表示否，1表示是
 #define PDM_FOR_COOLER 0 // 定义冷却风扇是否使用PDM控制，0表示否，1表示是
@@ -82,11 +82,11 @@
 #define AUTORETRACT_ENABLED 0// 定义是否自动回抽，0表示否，1表示是
 #define RETRACTION_LENGTH 3 // 定义回抽长度为3毫米
 #define RETRACTION_LONG_LENGTH 13 // 定义长距离移动时的回抽长度为13毫米
-#define RETRACTION_SPEED 40 // 定义回抽速度为40毫米/秒
+#define RETRACTION_SPEED 100 // 定义回抽速度为40毫米/秒
 #define RETRACTION_Z_LIFT 0 // 定义回抽时Z轴提升的高度为0毫米
 #define RETRACTION_UNDO_EXTRA_LENGTH 0 // 定义恢复挤出时额外推进的长度为0毫米
 #define RETRACTION_UNDO_EXTRA_LONG_LENGTH 0 // 定义长距离移动后恢复挤出时额外推进的长度为0毫米
-#define RETRACTION_UNDO_SPEED 20 // 定义恢复挤出时的速度为20毫米/秒
+#define RETRACTION_UNDO_SPEED 200 // 定义恢复挤出时的速度为20毫米/秒
 #define FILAMENTCHANGE_X_POS 0 // 定义换料时X轴的位置为0毫米
 #define FILAMENTCHANGE_Y_POS 0 // 定义换料时Y轴的位置为0毫米
 #define FILAMENTCHANGE_Z_ADD  2 // 定义换料时Z轴提升的高度为2毫米
@@ -246,14 +246,14 @@ It also can add a delay to wait for spindle to run on full speed.
 #define DISABLE_X 0// 定义是否在打印结束后关闭X轴电机，0表示否，1表示是
 #define DISABLE_Y 0
 #define DISABLE_Z 0
-#define DISABLE_E 0
+#define DISABLE_E 1
 #define INVERT_X_DIR 0// 定义是否反转X轴的方向，0表示否，1表示是
 #define INVERT_Y_DIR 0
 #define INVERT_Z_DIR 1
 #define X_HOME_DIR -1// 定义X轴回零时的方向，-1表示最小限位开关方向，1表示最大限位开关方向
 #define Y_HOME_DIR -1
 #define Z_HOME_DIR -1
-#define X_MAX_LENGTH 300// 定义X轴的最大长度（毫米）
+#define X_MAX_LENGTH 150// 定义X轴的最大长度（毫米）
 #define Y_MAX_LENGTH 150
 #define Z_MAX_LENGTH 180
 #define X_MIN_POS 0// 定义X轴的最小位置（毫米）
@@ -289,8 +289,8 @@ It also can add a delay to wait for spindle to run on full speed.
 #define DELTASEGMENTS_PER_PRINTLINE 24 // 定义三角洲式打印机在打印时每条直线的分段数，越大则打印的曲线越平滑
 #define STEPPER_INACTIVE_TIME 360L // 定义电机在无动作后多久关闭（秒），0表示不关闭
 #define MAX_INACTIVE_TIME 0L // 定义打印机在无动作后多久关闭（秒），0表示不关闭
-#define MAX_FEEDRATE_X 200 // 定义X轴的最大进给速度（毫米/秒）
-#define MAX_FEEDRATE_Y 200 // 定义Y轴的最大进给速度（毫米/秒）
+#define MAX_FEEDRATE_X 2000 // 定义X轴的最大进给速度（毫米/秒）
+#define MAX_FEEDRATE_Y 2000 // 定义Y轴的最大进给速度（毫米/秒）
 #define MAX_FEEDRATE_Z 2 // 定义Z轴的最大进给速度（毫米/秒）
 #define HOMING_FEEDRATE_X 40 // 定义X轴回零时的进给速度（毫米/秒）
 #define HOMING_FEEDRATE_Y 40 // 定义Y轴回零时的进给速度（毫米/秒）
@@ -311,8 +311,8 @@ It also can add a delay to wait for spindle to run on full speed.
 #define STEP_DOUBLER_FREQUENCY 12000 // 定义步进电机双倍频率（赫兹）
 #define ALLOW_QUADSTEPPING 1 // 定义是否允许步进电机四倍步进，0表示否，1表示是
 #define DOUBLE_STEP_DELAY 0 // 定义步进电机双倍步进延迟时间（微秒）
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_X 1000 // 定义X轴的最大加速度（毫米/平方秒）
-#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1000 // 同上，对于Y轴
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_X 8000 // 定义X轴的最大加速度（毫米/平方秒）
+#define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Y 8000 // 同上，对于Y轴
 #define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100 // 同上，对于Z轴
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 1000 // 同上，对于X轴非打印移动
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1000 // 同上，对于Y轴非打印移动
@@ -492,7 +492,7 @@ Values must be in range 1..255
 
 
 #define NUM_MOTOR_DRIVERS 1 // 定义使用的电机驱动器的数量为1
-#define MOTOR_DRIVER_1(var) StepperDriver<26,28,24,0,0> var(80,10) // 定义第一个电机驱动器的参数，包括步进引脚，方向引脚，使能引脚，最小限位开关引脚，最大限位开关引脚，每转步数，每毫米步数
+#define MOTOR_DRIVER_1(var) StepperDriver<26,28,24,0,0> var(107,40) // 定义第一个电机驱动器的参数，包括步进引脚，方向引脚，使能引脚，最小限位开关引脚，最大限位开关引脚，每转步数，每毫米步数
 
 
 

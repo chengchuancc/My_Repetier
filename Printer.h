@@ -35,7 +35,11 @@ Level 4: Step position => Level 3 converted into steps for motor position
 
 Level 5: Nonlinear motor step position, only for nonlinear drive systems
          destinationDeltaSteps
-
+第一层：G代码 => 坐标与G代码发送的一致。
+第二层：真实坐标 => 坐标根据G92指令进行坐标偏移的修正。 currentPosition和lastCmdPos是这一层的变量。
+第三层：变换和偏移 => 包括挤出机偏移和热床旋转的影响。 这些变量只是临时存储的。
+第四层：步进位置 => 将第三层的坐标转换为电机步数。 currentPositionSteps和destinationPositionSteps是这一层的变量。
+第五层：非线性电机步进位置，只适用于非线性驱动系统（如三角洲或SCARA） destinationDeltaSteps
 
 */
 
@@ -723,9 +727,9 @@ public:
         return flag1 & PRINTER_FLAG1_NO_DESTINATION_CHECK;
     }
 
-    static INLINE void setNoDestinationCheck(uint8_t b)
+    static INLINE void setNoDestinationCheck(uint8_t b)// 定义一个静态内联方法，用于设置打印机是否检查目标位置的标志位
     {
-        flag1 = (b ? flag1 | PRINTER_FLAG1_NO_DESTINATION_CHECK : flag1 & ~PRINTER_FLAG1_NO_DESTINATION_CHECK);
+        flag1 = (b ? flag1 | PRINTER_FLAG1_NO_DESTINATION_CHECK : flag1 & ~PRINTER_FLAG1_NO_DESTINATION_CHECK);//// 使用三元运算符根据参数b的值（非零为真，零为假）修改flag1变量的值。flag1是一个静态变量，用于存储一些打印机的标志位。PRINTER_FLAG1_NO_DESTINATION_CHECK是一个宏定义，表示是否检查目标位置的位掩码。如果b为真，就将flag1与该位掩码进行按位或运算，将对应的位置为1；如果b为假，就将flag1与该位掩码的按位取反进行按位与运算，将对应的位置为0。
     }
 
     static INLINE uint8_t isPowerOn()
