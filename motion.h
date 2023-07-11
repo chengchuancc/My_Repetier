@@ -502,7 +502,7 @@ public:
 #endif
 #endif
     }
-    INLINE bool moveDecelerating()
+    INLINE bool moveDecelerating()//判断是否需要减速
     {
         if(stepsRemaining <= decelSteps)
         {
@@ -515,7 +515,7 @@ public:
         }
         else return false;
     }
-    INLINE bool moveAccelerating()
+    INLINE bool moveAccelerating()//判断是否需要加速
     {
         return Printer::stepNumber <= accelSteps;
     }

@@ -21,29 +21,30 @@
   Functions in this file are used to communicate using ascii or repetier protocol.
 */
 
-#include "Repetier.h"
+#include "Repetier.h" // 包含Repetier.h头文件，里面有一些常用的宏定义和类型定义
 
-#ifndef FEATURE_CHECKSUM_FORCED
-#define FEATURE_CHECKSUM_FORCED false
+#ifndef FEATURE_CHECKSUM_FORCED // 如果没有定义FEATURE_CHECKSUM_FORCED宏
+#define FEATURE_CHECKSUM_FORCED false // 定义FEATURE_CHECKSUM_FORCED宏为false，表示是否强制要求每个指令都有校验和
 #endif
 
-GCode    GCode::commandsBuffered[GCODE_BUFFER_SIZE]; ///< Buffer for received commands.
-uint8_t  GCode::bufferReadIndex = 0; ///< Read position in gcode_buffer.
-uint8_t  GCode::bufferWriteIndex = 0; ///< Write position in gcode_buffer.
-uint8_t  GCode::commandReceiving[MAX_CMD_SIZE]; ///< Current received command.
-uint8_t  GCode::commandsReceivingWritePosition = 0; ///< Writing position in gcode_transbuffer.
-uint8_t  GCode::sendAsBinary; ///< Flags the command as binary input.
-uint8_t  GCode::wasLastCommandReceivedAsBinary = 0; ///< Was the last successful command in binary mode?
-uint8_t  GCode::commentDetected = false; ///< Flags true if we are reading the comment part of a command.
-uint8_t  GCode::binaryCommandSize; ///< Expected size of the incoming binary command.
-bool     GCode::waitUntilAllCommandsAreParsed = false; ///< Don't read until all commands are parsed. Needed if gcode_buffer is misused as storage for strings.
-uint32_t GCode::lastLineNumber = 0; ///< Last line number received.
-uint32_t GCode::actLineNumber; ///< Line number of current command.
-int8_t   GCode::waitingForResend = -1; ///< Waiting for line to be resend. -1 = no wait.
-volatile uint8_t GCode::bufferLength = 0; ///< Number of commands stored in gcode_buffer
-millis_t GCode::timeOfLastDataPacket = 0; ///< Time, when we got the last data packet. Used to detect missing uint8_ts.
-uint8_t  GCode::formatErrors = 0;
-PGM_P GCode::fatalErrorMsg = NULL; ///< message unset = no fatal error 
+GCode    GCode::commandsBuffered[GCODE_BUFFER_SIZE]; ///< Buffer for received commands. // 静态数组，用于缓存接收到的指令
+uint8_t  GCode::bufferReadIndex = 0; ///< Read position in gcode_buffer. // 静态变量，表示在gcode_buffer中的读取位置
+uint8_t  GCode::bufferWriteIndex = 0; ///< Write position in gcode_buffer. // 静态变量，表示在gcode_buffer中的写入位置
+uint8_t  GCode::commandReceiving[MAX_CMD_SIZE]; ///< Current received command. // 静态数组，用于存储当前接收到的指令
+uint8_t  GCode::commandsReceivingWritePosition = 0; ///< Writing position in gcode_transbuffer. // 静态变量，表示在gcode_transbuffer中的写入位置
+uint8_t  GCode::sendAsBinary; ///< Flags the command as binary input. // 静态变量，表示指令是否是二进制输入的标志位
+uint8_t  GCode::wasLastCommandReceivedAsBinary = 0; ///< Was the last successful command in binary mode? // 静态变量，表示上一个成功接收的指令是否是二进制模式的标志位
+uint8_t  GCode::commentDetected = false; ///< Flags true if we are reading the comment part of a command. // 静态变量，表示是否正在读取指令的注释部分的标志位
+uint8_t  GCode::binaryCommandSize; ///< Expected size of the incoming binary command. // 静态变量，表示预期的二进制指令的大小
+bool     GCode::waitUntilAllCommandsAreParsed = false; ///< Don't read until all commands are parsed. Needed if gcode_buffer is misused as storage for strings. // 静态变量，表示是否等待所有指令被解析后再读取的布尔值。如果gcode_buffer被误用为字符串存储，则需要这样做。
+uint32_t GCode::lastLineNumber = 0; ///< Last line number received. // 静态变量，表示接收到的最后一行的行号
+uint32_t GCode::actLineNumber; ///< Line number of current command. // 静态变量，表示当前指令的行号
+int8_t   GCode::waitingForResend = -1; ///< Waiting for line to be resend. -1 = no wait. // 静态变量，表示等待重发的行号。-1 = 不等待
+volatile uint8_t GCode::bufferLength = 0; ///< Number of commands stored in gcode_buffer // 易失性静态变量，表示存储在gcode_buffer中的指令数
+millis_t GCode::timeOfLastDataPacket = 0; ///< Time, when we got the last data packet. Used to detect missing uint8_ts. // 静态变量，表示我们得到最后一个数据包的时间。用于检测丢失的字节。
+uint8_t  GCode::formatErrors = 0; // 静态变量，表示格式错误的次数
+PGM_P GCode::fatalErrorMsg = NULL; ///< message unset = no fatal error  // 指向程序存储空间（flash）中字符串常量的指针，表示致命错误信息。如果为空，则表示没有致命错误。
+
 
 /** \page Repetier-protocol
 

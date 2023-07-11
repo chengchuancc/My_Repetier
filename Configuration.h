@@ -492,11 +492,10 @@ Values must be in range 1..255
 
 
 #define NUM_MOTOR_DRIVERS 1 // 定义使用的电机驱动器的数量为1
-<<<<<<< HEAD
 #define MOTOR_DRIVER_1(var) StepperDriver<26,28,24,0,0> var(107,40) // 定义第一个电机驱动器的参数，包括步进引脚，方向引脚，使能引脚，最小限位开关引脚，最大限位开关引脚，每转步数，每毫米步数
-=======
+
 #define MOTOR_DRIVER_1(var) StepperDriver<26,28,24,0,0> var(107,50) // 定义第一个电机驱动器的参数，包括步进引脚，方向引脚，使能引脚，最小限位开关引脚，最大限位开关引脚，每转步数，每毫米步数
->>>>>>> 0d3481ff61b80fc504cba6a890a236fafdded1bc
+
 
 
 

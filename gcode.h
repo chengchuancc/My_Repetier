@@ -23,30 +23,30 @@
 class SDCard;
 class GCode   // 52 uint8_ts per command needed
 {
-    uint16_t params;
-    uint16_t params2;
+    uint16_t params; // 用于存储指令是否有M、N、G、X、Y、Z、E、F、T、S、P等参数的标志位
+    uint16_t params2; // 用于存储指令是否有I、J、R、D、C、H、A、B、K、L、O等参数以及是否是V2格式或有格式错误的标志位
 public:
-    uint16_t N; // Line number
-    uint16_t M;
-    uint16_t G;
-    float X;
-    float Y;
-    float Z;
-    float E;
-    float F;
-    int32_t S;
-    int32_t P;
-    float I;
-    float J;
-    float R;
-    float D;
-    float C;
-    float H;
-    float A;
-    float B;
-    float K;
-    float L;
-    float O;
+    uint16_t N; // Line number // 行号
+    uint16_t M; // M指令的编号
+    uint16_t G; // G指令的编号
+    float X; // X坐标或参数
+    float Y; // Y坐标或参数
+    float Z; // Z坐标或参数
+    float E; // E坐标或参数
+    float F; // F参数，表示进给速度
+    int32_t S; // S参数，表示温度或其他值
+    int32_t P; // P参数，表示时间或其他值
+    float I; // I参数，表示圆弧中心的X偏移量或其他值
+    float J; // J参数，表示圆弧中心的Y偏移量或其他值
+    float R; // R参数，表示圆弧半径或其他值
+    float D; // D参数，表示挤出机直径或其他值
+    float C; // C参数，表示圆弧角度或其他值
+    float H; // H参数，表示Z探针高度或其他值
+    float A; // A参数，表示旋转角度或其他值（对于非笛卡尔系统）
+    float B; // B参数，表示旋转角度或其他值（对于非笛卡尔系统）
+    float K; // K参数，表示旋转角度或其他值（对于非笛卡尔系统）
+    float L; // L参数，表示LED亮度或其他值
+    float O; // O参数，表示激光功率或其他值
 
     char *text; //text[17];
     //moved the byte to the end and aligned ints on short boundary

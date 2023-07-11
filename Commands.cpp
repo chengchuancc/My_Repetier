@@ -2378,34 +2378,35 @@ break;
 /**
 \brief Execute the command stored in com.
 */
-void Commands::executeGCode(GCode *com) {
-    if (INCLUDE_DEBUG_COMMUNICATION) {
-        if(Printer::debugCommunication()) {
-            if(com->hasG() || (com->hasM() && com->M != 111)) {
-                previousMillisCmd = HAL::timeInMilliseconds();
-                return;
+void Commands::executeGCode(GCode *com) { // 定义一个静态方法，用于执行一个G代码
+    if (INCLUDE_DEBUG_COMMUNICATION) { // 如果定义了包含调试通信的宏
+        if(Printer::debugCommunication()) { // 如果打印机的调试通信标志位为真
+            if(com->hasG() || (com->hasM() && com->M != 111)) { // 如果指令有G参数，或者有M参数且M参数不等于111（表示设置调试级别）
+                previousMillisCmd = HAL::timeInMilliseconds(); // 更新上一个指令的时间戳为当前时间
+                return; // 返回，不执行该指令
             }
         }
     }
-    if(com->hasG()) processGCode(com);
-    else if(com->hasM()) processMCode(com);
-    else if(com->hasT()) {    // Process T code
-        //com->printCommand(); // for testing if this the source of extruder switches
-        Commands::waitUntilEndOfAllMoves();
-        Extruder::selectExtruderById(com->T);
-    } else {
-        if(Printer::debugErrors()) {
-            Com::printF(Com::tUnknownCommand);
-            com->printCommand();
+    if(com->hasG()) processGCode(com); // 如果指令有G参数，调用processGCode方法，处理G指令
+    else if(com->hasM()) processMCode(com); // 否则，如果指令有M参数，调用processMCode方法，处理M指令
+    else if(com->hasT()) {    // Process T code // 否则，如果指令有T参数，处理T指令（表示切换挤出机）
+        //com->printCommand(); // for testing if this the source of extruder switches // 打印指令，用于测试是否是挤出机切换的原因（这行代码被注释掉了）
+        Commands::waitUntilEndOfAllMoves(); // 调用waitUntilEndOfAllMoves方法，等待所有运动结束
+        Extruder::selectExtruderById(com->T); // 调用Extruder类的selectExtruderById方法，根据T参数的值（表示挤出机编号）选择挤出机
+    } else { // 否则
+        if(Printer::debugErrors()) { // 如果打印机的调试错误标志位为真
+            Com::printF(Com::tUnknownCommand); // 调用Com类的printF方法，打印一条信息，表示未知指令
+            com->printCommand(); // 调用printCommand方法，打印该指令
         }
     }
-#ifdef DEBUG_DRYRUN_ERROR
-    if(Printer::debugDryrun()) {
-        Com::printFLN("Dryrun was enabled");
-        com->printCommand();
-        Printer::debugReset(8);
+#ifdef DEBUG_DRYRUN_ERROR // 如果定义了调试空运行错误的宏
+    if(Printer::debugDryrun()) { // 如果打印机的调试空运行标志位为真
+        Com::printFLN("Dryrun was enabled"); // 调用Com类的printFLN方法，打印一行信息，表示空运行已启用
+        com->printCommand(); // 调用printCommand方法，打印该指令
+        Printer::debugReset(8); // 调用Printer类的debugReset方法，重置打印机的调试标志位（第8位表示空运行）
     }
 #endif
+
 
 }
 
